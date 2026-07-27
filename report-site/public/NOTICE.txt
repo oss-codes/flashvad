@@ -1,5 +1,5 @@
 FlashVAD
-Copyright 2026 OSS Codes
+Copyright 2026 Himanshu Maurya
 
 The FlashVAD v0.1 research checkpoint was trained using derived data from:
 

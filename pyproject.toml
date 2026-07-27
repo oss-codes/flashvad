@@ -14,7 +14,7 @@ license-files = [
   "NOTICE",
   "models/flashvad-v0.1/MODEL_LICENSE.md",
 ]
-authors = [{ name = "OSS Codes" }]
+authors = [{ name = "Himanshu Maurya" }]
 keywords = ["vad", "voice-activity-detection", "telephony", "webrtc", "onnx"]
 classifiers = [
   "Development Status :: 3 - Alpha",

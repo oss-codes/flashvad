@@ -3,7 +3,8 @@ message: "If you use FlashVAD in research, please cite this software."
 title: "FlashVAD"
 type: software
 authors:
-  - name: "OSS Codes"
+  - family-names: "Maurya"
+    given-names: "Himanshu"
 version: 0.1.0
 date-released: 2026-07-27
 license: "MIT AND CC-BY-4.0"

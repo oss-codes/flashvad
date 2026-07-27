@@ -13,7 +13,7 @@ This applies to:
 
 Attribution:
 
-> FlashVAD v0.1 by OSS Codes, with training-data and teacher attribution
+> FlashVAD v0.1 by Himanshu Maurya, with training-data and teacher attribution
 > documented in the repository `NOTICE` file.
 
 The repository source code, excluding these model-derived artifacts, is
