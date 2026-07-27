@@ -1,0 +1,31 @@
+{
+  "artifact": "flashvad-v0.1.pt",
+  "artifact_sha256": "ca9e35475518466b2a1f2e89b4953cd1e26e3d8c513cdcf265ab319e74e2b288",
+  "combined_median_us": 857.7294999999999,
+  "estimated_int8_parameter_bytes": 46170,
+  "fp32_parameter_bytes": 184680,
+  "frontend_median_us": 70.5,
+  "frontend_p95_us": 76.875,
+  "frontend_p99_us": 89.833,
+  "iterations": 5000,
+  "model_step_median_us": 787.2294999999999,
+  "model_step_p95_us": 926.625,
+  "model_step_p99_us": 1101.292,
+  "parameters": 46170,
+  "platform": {
+    "chip": "Apple M4 Pro",
+    "machine": "arm64",
+    "macos": "26.5.2",
+    "python": "3.12.3",
+    "release": "25.5.0",
+    "system": "Darwin"
+  },
+  "recorded_at_utc": "2026-07-26T23:59:39.767097+00:00",
+  "runtime": {
+    "audio": "all-zero 10 ms hops",
+    "torch": "2.13.0"
+  },
+  "schema": "flashvad-pytorch-benchmark-v1",
+  "threads": 1,
+  "warmup": 500
+}

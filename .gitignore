@@ -1,0 +1,27 @@
+.DS_Store
+.venv/
+.uv-cache/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+dist/
+build/
+*.egg-info/
+
+# Local datasets, experiments, and generated native products
+artifacts/
+data/
+checkpoints/
+
+# Local agent and editor state
+.omo/
+.openai/
+.env
+.env.*
+
+# Report-site dependencies and build output
+report-site/node_modules/
+report-site/dist/
+report-site/.astro/
+report-site/coverage/

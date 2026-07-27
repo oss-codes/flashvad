@@ -1,0 +1,737 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Metric from "../components/Metric.astro";
+import { ModelPreview } from "../components/ModelPreview";
+import { VadPlayground } from "../components/VadPlayground";
+
+const base = import.meta.env.BASE_URL;
+
+const benchmarkRows = [
+  {
+    name: "FlashVAD native",
+    detail: "Apple Accelerate · embedded weights",
+    hop: "10 ms",
+    latency: "11.42 µs",
+    rtf: "0.001142",
+    init: "3.54 µs",
+    width: "16%",
+    tone: "ours",
+  },
+  {
+    name: "FlashVAD ONNX",
+    detail: "ONNX Runtime · model step only",
+    hop: "10 ms",
+    latency: "58.88 µs",
+    rtf: "0.005888*",
+    init: "not captured",
+    width: "42%",
+    tone: "silero",
+  },
+  {
+    name: "FlashVAD PyTorch",
+    detail: "Reference frontend + model",
+    hop: "10 ms",
+    latency: "857.73 µs",
+    rtf: "0.085773",
+    init: "not captured",
+    width: "100%",
+    tone: "ten",
+  },
+];
+
+const externalRows = [
+  {
+    name: "FlashVAD native",
+    hop: "10 ms",
+    latency: "11.33 µs",
+    rtf: "0.001133",
+    advantage: "1×",
+    scope: "Embedded frontend + model",
+  },
+  {
+    name: "Silero ONNX",
+    hop: "32 ms",
+    latency: "128.17 µs",
+    rtf: "0.004005",
+    advantage: "3.53×",
+    scope: "Model + recurrent state; postprocessing excluded",
+  },
+  {
+    name: "TEN native",
+    hop: "10 ms",
+    latency: "161.04 µs",
+    rtf: "0.016104",
+    advantage: "14.2×",
+    scope: "Official frontend + model + decision",
+  },
+  {
+    name: "FireRed streaming ONNX",
+    hop: "10 ms",
+    latency: "511.96 µs",
+    rtf: "0.051196",
+    advantage: "45.2×",
+    scope: "Model + cache; frontend/postprocessing excluded",
+  },
+];
+
+const completedDataWork = [
+  "960 training and 240 validation FLEURS clips across 12 configurations",
+  "96 training and 24 validation CC BY MUSAN hard negatives",
+  "Eight MPS trials and 128 measured epochs on the local Apple Silicon Mac",
+  "Content-hash separation checks for train, validation and noise audio",
+  "Candidate selection without TEN, Silero or FireRed public benchmark data",
+  "Per-language, noise, boundary and item-bootstrap evaluation",
+];
+
+const releaseWork = [
+  "License or collect consented India and GCC call audio",
+  "Human-label speech boundaries and difficult negatives",
+  "Freeze speaker-disjoint train, development and test sets",
+  "Repeat detector calibration on a real-call development set",
+  "Pass false-trigger, short-utterance and endpoint gates",
+  "Run shadow traffic before any production claim",
+];
+
+const marketRows = [
+  {
+    name: "WebRTC VAD",
+    fit: "Minimal deterministic C baseline",
+    tradeoff: "Very low compute; weaker difficult-noise adaptation",
+  },
+  {
+    name: "FlashVAD",
+    fit: "Local web, macOS and PSTN control",
+    tradeoff: "Low-latency runtime; India/GCC accuracy gate remains open",
+  },
+  {
+    name: "Silero VAD",
+    fit: "Mature MIT ONNX/JIT deployment",
+    tradeoff: "Strong reference with direct 8/16 kHz deployment",
+  },
+  {
+    name: "TEN VAD",
+    fit: "Small ONNX/WASM reference",
+    tradeoff: "Validate licensing and the exact commercial call domain",
+  },
+  {
+    name: "FireRedVAD",
+    fit: "Multilingual teacher/server reference",
+    tradeoff: "Public call-domain comparison data is still needed",
+  },
+  {
+    name: "Semantic endpointing",
+    fit: "Turn completion above acoustic VAD",
+    tradeoff: "Adds ASR/model latency; not a barge-in replacement",
+  },
+];
+---
+
+<BaseLayout>
+      <main id="main">
+        <section class="hero" id="top">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span class="status-dot" aria-hidden="true" />
+              research preview · 27 July 2026
+            </p>
+            <h1>
+              Voice detection in
+              <span> 11.42 microseconds.</span>
+            </h1>
+            <p class="hero-lede">
+              An original 46K-parameter streaming VAD with 10 ms decisions,
+              a 261 KiB native macOS runtime, and local browser, LiveKit,
+              Pipecat, and telephone paths. Runtime is measured; production
+              multilingual accuracy is not yet established.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#benchmarks">
+                See the benchmark
+              </a>
+              <a class="button secondary" href="#accuracy">
+                Read the accuracy check
+              </a>
+            </div>
+          </div>
+
+          <aside class="signal-card" aria-label="Streaming output example">
+            <div class="signal-head">
+              <span>STREAM / 16 KHZ</span>
+              <span class="live">EXAMPLE</span>
+            </div>
+            <div class="wave" aria-hidden="true">
+              {[
+                16, 30, 20, 52, 34, 76, 43, 90, 62, 38, 72, 46, 24, 58, 34,
+                18, 42, 26, 14, 20, 12, 8, 12, 7,
+              ].map((height) => (
+                <span style={`height: ${height}%`} />
+              ))}
+            </div>
+            <div class="signal-result">
+              <div>
+                <span>example probability</span>
+                <strong>0.92</strong>
+              </div>
+              <div>
+                <span>decision hop</span>
+                <strong>10 ms</strong>
+              </div>
+            </div>
+            <div class="latency-readout">
+              <span>frontend + model</span>
+              <strong>0.01142 ms</strong>
+            </div>
+          </aside>
+        </section>
+
+        <section class="metric-strip" aria-label="Headline results">
+          <Metric
+            value="11.42 µs"
+            label="Warm inference"
+            note="Median frontend + model per 10 ms audio hop."
+          />
+          <Metric
+            value="261 KiB"
+            label="Native binary"
+            note="No Python, Torch or ONNX parser in the hot path."
+          />
+          <Metric
+            value="1,000 hops"
+            label="Native parity test"
+            note="C and PyTorch probabilities agree within the declared tolerance."
+          />
+          <Metric
+            value="10 ms"
+            label="Causal decisions"
+            note="No future audio is used to make a prediction."
+          />
+        </section>
+
+        <VadPlayground client:visible />
+        <ModelPreview client:visible />
+
+        <section class="section benchmark-section" id="benchmarks">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">One model. Three execution paths.</p>
+              <h2>The native path removes framework overhead.</h2>
+            </div>
+            <p>
+              Apple M4 Pro, one calling thread, warm streaming state. The ONNX
+              row excludes feature extraction; the native and PyTorch rows
+              include it.
+            </p>
+          </div>
+
+          <div class="benchmark-layout">
+            <div class="chart-card">
+              <div class="chart-axis" aria-hidden="true">
+                <span>10 µs</span>
+                <span>100 µs</span>
+                <span>1,000 µs</span>
+              </div>
+              <div class="bars">
+                {benchmarkRows.map((row) => (
+                  <div class="bar-row">
+                    <div class="bar-label">
+                      <strong>{row.name}</strong>
+                      <span>{row.detail}</span>
+                    </div>
+                    <div class="bar-track">
+                      <div
+                        class={`bar-fill ${row.tone}`}
+                        style={`width: ${row.width}`}
+                      >
+                        <span>{row.latency}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div class="speed-calls">
+              <article>
+                <span class="speed-number">C</span>
+                <h3>Embedded hot path</h3>
+                <p>No Python, Torch, or ONNX parser in per-hop inference.</p>
+              </article>
+              <article>
+                <span class="speed-number">1×</span>
+                <h3>One process owner</h3>
+                <p>LiveKit and Pipecat calls share one immutable ONNX session.</p>
+              </article>
+              <article>
+                <span class="speed-number">3.5–45×</span>
+                <h3>Pinned external rerun</h3>
+                <p>Lower warm compute per audio-time on the recorded protocol.</p>
+              </article>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>Latest captured same-machine runtime artifact</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Runtime</th>
+                  <th scope="col">Hop</th>
+                  <th scope="col">Median</th>
+                  <th scope="col">RTF</th>
+                  <th scope="col">Initialization</th>
+                </tr>
+              </thead>
+              <tbody>
+                {benchmarkRows.map((row) => (
+                  <tr>
+                    <th scope="row">{row.name}</th>
+                    <td>{row.hop}</td>
+                    <td>{row.latency}</td>
+                    <td>{row.rtf}</td>
+                    <td>{row.init}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>Same-run external runtime snapshot · 10,000 measured calls</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Runtime</th>
+                  <th scope="col">Hop</th>
+                  <th scope="col">Median</th>
+                  <th scope="col">RTF</th>
+                  <th scope="col">FlashVAD compute advantage</th>
+                  <th scope="col">Measured scope</th>
+                </tr>
+              </thead>
+              <tbody>
+                {externalRows.map((row) => (
+                  <tr>
+                    <th scope="row">{row.name}</th>
+                    <td>{row.hop}</td>
+                    <td>{row.latency}</td>
+                    <td>{row.rtf}</td>
+                    <td>{row.advantage}</td>
+                    <td>{row.scope}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p class="benchmark-note">
+            These are compute measurements, not accuracy or end-of-turn
+            rankings. External artifacts were pinned and hashed; differing
+            scopes are shown instead of being hidden. The multiplier is the
+            competitor RTF divided by FlashVAD native RTF.{" "}
+            <a href={`${base}benchmarks/external-runtime-m4-pro.json`}>
+              Download the machine-readable evidence.
+            </a>
+          </p>
+        </section>
+
+        <section class="section architecture-section" id="architecture">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">What we built</p>
+              <h2>A small causal architecture with no borrowed weights.</h2>
+            </div>
+            <p>
+              Common building blocks, independently implemented and shaped for
+              fast stateful voice calls.
+            </p>
+          </div>
+
+          <div class="pipeline" aria-label="FlashVAD architecture">
+            <article>
+              <span class="step">01</span>
+              <h3>Audio</h3>
+              <p>16 kHz mono PCM, streamed in arbitrary chunks.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">02</span>
+              <h3>43 features</h3>
+              <p>40 log-mel bands + RMS + flatness + zero crossings.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">03</span>
+              <h3>Causal encoder</h3>
+              <p>Four depthwise temporal blocks and one 64-unit GRU.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">04</span>
+              <h3>Native result</h3>
+              <p>Speech probability and updated per-call state.</p>
+            </article>
+          </div>
+
+          <div class="architecture-facts">
+            <article>
+              <span>Model</span>
+              <strong>46,170 parameters</strong>
+            </article>
+            <article>
+              <span>Analysis</span>
+              <strong>25 ms window / 10 ms hop</strong>
+            </article>
+            <article>
+              <span>Runtime</span>
+              <strong>C + Apple Accelerate</strong>
+            </article>
+            <article>
+              <span>Fallback</span>
+              <strong>Stateful FP32 ONNX</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="section architecture-section" id="integration">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">WebRTC, SIP and PSTN</p>
+              <h2>One persistent model. Small state per call.</h2>
+            </div>
+            <p>
+              Keep model loading outside the call path. Browser and telephone
+              adapters convert incoming audio into the same 10 ms causal stream.
+            </p>
+          </div>
+
+          <div class="pipeline" aria-label="Voice-call integration paths">
+            <article>
+              <span class="step">WEB</span>
+              <h3>AudioWorklet</h3>
+              <p>Transfer 10 ms chunks, resample, then run persistent WASM state.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">PSTN</span>
+              <h3>G.711 ingress</h3>
+              <p>Decode PCMU/PCMA at 8 kHz and causally convert to 16 kHz.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">VAD</span>
+              <h3>Per-call state</h3>
+              <p>Share immutable weights; retain independent caches and hysteresis.</p>
+            </article>
+            <span class="pipeline-arrow" aria-hidden="true">
+              →
+            </span>
+            <article>
+              <span class="step">TURN</span>
+              <h3>Endpoint policy</h3>
+              <p>Combine silence with ASR stability and semantic completion.</p>
+            </article>
+          </div>
+
+          <div class="architecture-facts">
+            <article>
+              <span>Browser capture</span>
+              <strong>10 ms worklet chunks</strong>
+            </article>
+            <article>
+              <span>LiveKit Agents</span>
+              <strong>Custom VAD stream adapter</strong>
+            </article>
+            <article>
+              <span>Pipecat</span>
+              <strong>Custom VADAnalyzer</strong>
+            </article>
+            <article>
+              <span>PSTN ingress</span>
+              <strong>PCMU · PCMA · PCM16</strong>
+            </article>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>Market position by deployment need</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Option</th>
+                  <th scope="col">Best fit</th>
+                  <th scope="col">Tradeoff</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marketRows.map((row) => (
+                  <tr>
+                    <th scope="row">{row.name}</th>
+                    <td>{row.fit}</td>
+                    <td>{row.tradeoff}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p class="benchmark-note">
+            VAD handles immediate acoustic activity. A semantic end-of-turn model
+            is a second pass, not a substitute for fast barge-in detection.
+          </p>
+        </section>
+
+        <section class="section accuracy-section" id="accuracy">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">The example we ran</p>
+              <h2>Training improved validation. The external gate stopped a regression.</h2>
+            </div>
+            <p>
+              The retained model was evaluated repeatedly on this public set
+              during research. Treat the result as exploratory external-set
+              evidence, not an untouched test or release estimate.
+            </p>
+          </div>
+
+          <div class="accuracy-grid">
+            <article class="experiment-card synthetic">
+              <div class="experiment-top">
+                <span class="experiment-label">
+                  Multilingual Mac sweep
+                </span>
+                <span class="badge pass">8 / 8 trials passed</span>
+              </div>
+              <p class="big-score">0.914</p>
+              <p class="score-label">Selected detector F1 on held-out development data</p>
+              <dl>
+                <div>
+                  <dt>Training items</dt>
+                  <dd>1,056</dd>
+                </div>
+                <div>
+                  <dt>Validation items</dt>
+                  <dd>264</dd>
+                </div>
+                <div>
+                  <dt>Coverage</dt>
+                  <dd>12 configs + noise</dd>
+                </div>
+              </dl>
+              <p class="card-foot">
+                The selected policy reached 5.47% false alarms, 8.45% misses,
+                and 67 false triggers. On TEN it cut false alarms to 12.35%,
+                but F1 fell to 0.822 and misses rose to 27.36%, so it was not
+                promoted over the retained checkpoint.
+              </p>
+            </article>
+
+            <article class="experiment-card real">
+              <div class="experiment-top">
+                <span class="experiment-label">Public cross-domain check</span>
+                <span class="badge warning">Not release-ready</span>
+              </div>
+              <p class="big-score">0.882</p>
+              <p class="score-label">ROC-AUC on TEN&apos;s public test set</p>
+              <dl>
+                <div>
+                  <dt>Frames evaluated</dt>
+                  <dd>26,243</dd>
+                </div>
+                <div>
+                  <dt>F1 at configured threshold</dt>
+                  <dd>0.886 raw / 0.889 detector</dd>
+                </div>
+                <div>
+                  <dt>Configured false-alarm rate</dt>
+                  <dd>26.3%</dd>
+                </div>
+              </dl>
+              <p class="card-foot">
+                A 26.3% false-alarm rate remains too high for release. Raw AUC
+                95% item-bootstrap interval: 0.853–0.910; detector
+                false-alarm interval: 20.2–32.7% across 30 recordings. Repeated
+                consultation means these are descriptive, not confirmatory.
+              </p>
+            </article>
+          </div>
+
+          <div class="boundary-row">
+            <article>
+              <span>8</span>
+              <p>training configurations</p>
+            </article>
+            <article>
+              <span>128</span>
+              <p>total measured epochs</p>
+            </article>
+            <article>
+              <span>5.47%</span>
+              <p>selected development false alarms</p>
+            </article>
+            <article>
+              <span>12.35%</span>
+              <p>experimental TEN false alarms</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section data-section" id="data">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">Data traction</p>
+              <h2>The infrastructure is ready for real multilingual data.</h2>
+            </div>
+            <p>
+              “Multilingual” becomes a defensible claim only after evaluation
+              by language, channel, codec, noise and speaking condition.
+            </p>
+          </div>
+
+          <div class="data-board">
+            <article class="checklist done">
+              <div class="checklist-head">
+                <span>Implemented</span>
+                <strong>06 / 06</strong>
+              </div>
+              <ul>
+                {completedDataWork.map((item) => (
+                  <li>
+                    <span aria-hidden="true">✓</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article class="checklist pending">
+              <div class="checklist-head">
+                <span>Required for release</span>
+                <strong>Next milestone</strong>
+              </div>
+              <ul>
+                {releaseWork.map((item) => (
+                  <li>
+                    <span aria-hidden="true">→</span>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+
+          <div class="region-grid">
+            <article>
+              <span class="region-code">IN</span>
+              <div>
+                <h3>India coverage</h3>
+                <p>
+                  This weak-data run includes Gujarati, Hindi, Kannada, Punjabi,
+                  Tamil, Telugu, Bengali, Marathi, Malayalam and Urdu. Indian
+                  English and code-switching remain release targets.
+                </p>
+              </div>
+            </article>
+            <article>
+              <span class="region-code">GCC</span>
+              <div>
+                <h3>Gulf coverage</h3>
+                <p>
+                  This weak-data run includes Egyptian Arabic, US English and
+                  Indian languages used in GCC calls. Gulf dialects, Indian
+                  English, Tagalog and real call channels remain targets.
+                </p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section verdict-section" id="verdict">
+          <p class="kicker">Where we are</p>
+          <div class="verdict-grid">
+            <div>
+              <h2>Runtime milestone: achieved.</h2>
+              <p>
+                Sub-millisecond per-call initialization and low-double-digit
+                microsecond warm inference are demonstrated on the measured
+                Apple Silicon machine. Native parity is tested across 1,000
+                stateful hops with an explicit numerical tolerance.
+              </p>
+            </div>
+            <div>
+              <h2>Accuracy milestone: open.</h2>
+              <p>
+                The exploratory public-set ROC-AUC is 0.882. That set influenced
+                research decisions. The new low-false-alarm candidate was not
+                promoted because its public-set F1 and miss rate regressed. Real
+                India/GCC calls, human-reviewed boundaries and untouched release
+                splits are still required.
+              </p>
+            </div>
+          </div>
+          <div class="verdict-banner">
+            <span class="verdict-icon" aria-hidden="true">
+              ↳
+            </span>
+            <p>
+              <strong>The professional answer:</strong> keep the native
+              architecture, replace synthetic-only training with licensed
+              target-domain data, and treat VAD as acoustic evidence inside a
+              separate turn-end policy.
+            </p>
+          </div>
+        </section>
+
+        <section class="section methodology" id="methodology">
+          <div class="method-copy">
+            <p class="kicker">Methodology</p>
+            <h2>What the numbers do—and do not—mean.</h2>
+          </div>
+          <div class="method-details">
+            <details>
+              <summary>Benchmark conditions</summary>
+              <p>
+                Apple M4 Pro, 14 CPU cores, 24 GB memory, macOS 26.5.2, one
+                calling thread and warmed streaming state. The retained JSON
+                artifacts include hashes and runtime or toolchain details.
+              </p>
+            </details>
+            <details>
+              <summary>Fair-comparison limits</summary>
+              <p>
+                Competitor timing is included only from the pinned same-machine
+                rerun above. The evidence records source revisions, artifact
+                hashes, hop sizes, measured scope, and one predeclared protocol;
+                it is a compute comparison, not an accuracy ranking.
+              </p>
+            </details>
+            <details>
+              <summary>Accuracy limits</summary>
+              <p>
+                The public cross-domain set is a reality check, not the final
+                India/GCC benchmark. Release thresholds must be chosen on a
+                separate development set and then evaluated once on a frozen,
+                consented test set.
+              </p>
+            </details>
+            <details>
+              <summary>Public-set reuse disclosure</summary>
+              <p>
+                Several research candidates were inspected on TEN&apos;s public
+                set. The displayed retained result is therefore exploratory.
+                A future release must use a new, consented test set that remains
+                untouched until thresholds and the model are frozen.
+              </p>
+            </details>
+          </div>
+        </section>
+      </main>
+</BaseLayout>

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+      - run: uv sync --locked --all-extras
+      - run: uv run ruff check .
+      - run: uv run pytest
+      - run: uv build
+      - run: uv export --locked --all-extras --no-hashes --no-emit-project --output-file /tmp/flashvad-requirements.txt
+      - run: uvx pip-audit --requirement /tmp/flashvad-requirements.txt
+
+  macos-native:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v9.0.0
+        with:
+          enable-cache: true
+      - run: uv sync --locked --all-extras
+      - run: uv run pytest tests/test_native_export.py tests/test_framework_integrations.py
+      - run: uv build
+
+  report:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: report-site
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: report-site/package-lock.json
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run lint
+      - run: npm test
+      - run: FLASHVAD_BASE=/flashvad npm run test:subpath

@@ -1,0 +1,151 @@
+<header class="terminal-header">
+  <div class="prompt-line" aria-label="Project location">
+    <span class="prompt-path">~ flashvad</span>
+    <span class="prompt-branch">main</span>
+    <span class="prompt-arrow" aria-hidden="true">❯</span>
+  </div>
+
+  <div class="nav-line">
+    <a class="brand" href="#top" aria-label="FlashVAD report home">
+      <span class="brand-org">oss.codes/</span><span>flashvad</span><span class="cursor" aria-hidden="true"></span>
+    </a>
+    <nav aria-label="Report sections">
+      <a href="#try-it">test</a>
+      <a href="#model-preview">compare</a>
+      <a href="#benchmarks">speed</a>
+      <a href="#integration">integrate</a>
+      <a href="#accuracy">accuracy</a>
+      <a class="nav-cta" href="#verdict">verdict</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .terminal-header {
+    position: relative;
+    z-index: 20;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--mono);
+  }
+
+  .prompt-line,
+  .nav-line {
+    display: flex;
+    align-items: center;
+  }
+
+  .prompt-line {
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    letter-spacing: 0.04em;
+  }
+
+  .prompt-path {
+    color: var(--signal);
+  }
+
+  .prompt-branch {
+    color: var(--cyan);
+  }
+
+  .prompt-arrow {
+    color: var(--text);
+  }
+
+  .nav-line {
+    justify-content: space-between;
+    gap: 28px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    min-width: max-content;
+    color: var(--signal);
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    font-weight: 650;
+    letter-spacing: -0.04em;
+  }
+
+  .brand-org {
+    color: var(--text-soft);
+    font-weight: 450;
+  }
+
+  .cursor {
+    width: 0.52em;
+    height: 1.05em;
+    margin-left: 4px;
+    background: var(--signal);
+    animation: blink 1.1s steps(1) infinite;
+  }
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  nav a {
+    padding: 8px 9px;
+    color: var(--muted);
+    font-size: 0.74rem;
+    letter-spacing: 0.02em;
+    transition: color 140ms ease, background 140ms ease;
+  }
+
+  nav a::before {
+    content: "./";
+    color: var(--dim);
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: var(--text);
+    background: var(--surface-raised);
+  }
+
+  nav .nav-cta {
+    background: transparent;
+    color: var(--signal);
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .terminal-header {
+      padding-top: 16px;
+    }
+
+    .nav-line {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    nav {
+      justify-content: flex-start;
+      width: 100%;
+    }
+
+    nav a {
+      padding-left: 0;
+      padding-right: 14px;
+    }
+  }
+</style>

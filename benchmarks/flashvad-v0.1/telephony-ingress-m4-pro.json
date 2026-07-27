@@ -1,0 +1,27 @@
+{
+  "runtime": "python-numpy-telephone-ingress",
+  "input_sample_rate": 8000,
+  "output_sample_rate": 16000,
+  "results": [
+    {
+      "codec": "pcmu",
+      "packet_samples": 160,
+      "packet_ms": 20.0,
+      "median_us": 4.792,
+      "p95_us": 4.917,
+      "p99_us": 5.875,
+      "realtime_factor": 0.0002396,
+      "iterations": 20000
+    },
+    {
+      "codec": "pcma",
+      "packet_samples": 160,
+      "packet_ms": 20.0,
+      "median_us": 4.792,
+      "p95_us": 4.959,
+      "p99_us": 5.875,
+      "realtime_factor": 0.0002396,
+      "iterations": 20000
+    }
+  ]
+}

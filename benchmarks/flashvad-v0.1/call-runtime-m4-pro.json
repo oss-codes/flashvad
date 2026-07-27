@@ -1,0 +1,37 @@
+{
+  "native": {
+    "artifact": "libflashvad_native.dylib",
+    "artifact_sha256": "74df77ed054ed4f429a1356732a0928afe938950c0046be703ea9f1cd9e8792d",
+    "iterations": 10000,
+    "median_us": 13.208,
+    "p95_us": 14.042,
+    "p99_us": 23.625,
+    "realtime_factor": 0.0013208,
+    "warmup": 1000
+  },
+  "onnx": {
+    "artifact": "flashvad-stream.onnx",
+    "artifact_sha256": "9a88e34bf3118d60e25a16cb622cb394e2f3ab71445b0aa5957df6f1d5f1b6ba",
+    "iterations": 10000,
+    "median_us": 89.333,
+    "p95_us": 110.875,
+    "p99_us": 208.542,
+    "realtime_factor": 0.0089333,
+    "warmup": 1000
+  },
+  "platform": {
+    "chip": "Apple M4 Pro",
+    "machine": "arm64",
+    "python": "3.12.3",
+    "release": "25.5.0",
+    "system": "Darwin"
+  },
+  "protocol": {
+    "audio": "one all-zero 10 ms float32 hop per push",
+    "clock": "perf_counter_ns",
+    "scope": "Python call-stream wrapper including frontend, model, and detector",
+    "threads": 1
+  },
+  "recorded_at_utc": "2026-07-27T18:25:34.308254+00:00",
+  "schema": "flashvad-call-runtime-benchmark-v1"
+}

@@ -1,0 +1,90 @@
+<footer>
+  <div class="footer-intro">
+    <a href="#top" class="footer-brand">
+      <span>oss.codes/</span>flashvad
+    </a>
+    <p>Fast acoustic evidence for better voice calls.</p>
+    <p class="license">
+      <a href={`${import.meta.env.BASE_URL}NOTICE.txt`}>MIT code + attributions</a>
+      ·
+      <a href={`${import.meta.env.BASE_URL}models/MODEL_LICENSE.md`}>CC BY 4.0 model</a>
+    </p>
+  </div>
+
+  <div class="source-links">
+    <span>research references</span>
+    <a href="https://github.com/snakers4/silero-vad" target="_blank" rel="noreferrer">Silero ↗</a>
+    <a href="https://github.com/TEN-framework/ten-vad" target="_blank" rel="noreferrer">TEN ↗</a>
+    <a href="https://github.com/FireRedTeam/FireRedVAD" target="_blank" rel="noreferrer">FireRed ↗</a>
+    <a href="https://arxiv.org/abs/2105.04065" target="_blank" rel="noreferrer">VAD in the Wild ↗</a>
+  </div>
+</footer>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 16px;
+    padding: 34px 0 46px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  .footer-intro {
+    display: grid;
+    gap: 7px;
+  }
+
+  .footer-brand {
+    color: var(--signal);
+    font-size: 0.93rem;
+  }
+
+  .footer-brand span {
+    color: var(--text-soft);
+  }
+
+  .license {
+    color: var(--dim);
+  }
+
+  .source-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px 16px;
+    max-width: 520px;
+  }
+
+  .source-links span {
+    width: 100%;
+    color: var(--dim);
+    text-align: right;
+  }
+
+  .source-links a {
+    color: var(--text-soft);
+  }
+
+  .source-links a:hover,
+  .source-links a:focus-visible {
+    color: var(--signal);
+  }
+
+  @media (max-width: 720px) {
+    footer {
+      flex-direction: column;
+    }
+
+    .source-links {
+      justify-content: flex-start;
+    }
+
+    .source-links span {
+      text-align: left;
+    }
+  }
+</style>

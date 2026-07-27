@@ -1,0 +1,23 @@
+FlashVAD
+Copyright 2026 OSS Codes
+
+The FlashVAD v0.1 research checkpoint was trained using derived data from:
+
+- FLEURS, Google LLC, licensed under CC BY 4.0.
+  https://huggingface.co/datasets/google/fleurs
+- AMI Meeting Corpus, licensed under CC BY 4.0.
+  https://groups.inf.ed.ac.uk/ami/corpus/
+- MUSAN, David Snyder, Guoguo Chen, and Daniel Povey, licensed under CC BY 4.0.
+  https://www.openslr.org/17/
+
+Weak frame targets were generated with Silero VAD, which is distributed under
+the MIT License:
+https://github.com/snakers4/silero-vad
+
+TEN VAD's public test set was used only for the retained cross-domain
+evaluation summary. TEN source code and weights are not included:
+https://github.com/TEN-framework/ten-vad
+
+FireRedVAD source code and weights are not included. Its official release was
+used only for reference measurements and rejected teacher-student experiments:
+https://github.com/FireRedTeam/FireRedVAD

@@ -1,0 +1,240 @@
+{
+  "schema": "flashvad-exploratory-evaluation-v1",
+  "status": "exploratory_repeated_public_set_evaluation",
+  "disclosure": "This public set was consulted across research candidates. Results are descriptive and must not be presented as an untouched test or production generalization estimate.",
+  "checkpoint": "models/flashvad-v0.1/flashvad-v0.1.pt",
+  "checkpoint_sha256": "ca9e35475518466b2a1f2e89b4953cd1e26e3d8c513cdcf265ab319e74e2b288",
+  "manifest": "TEN public test set (30 files)",
+  "source": {
+    "repository": "https://github.com/TEN-framework/ten-vad",
+    "revision": "22a3bcd4509d0faaa8eef4881e8af5f39c178950",
+    "manifest_digest": null,
+    "reproducibility_limit": "The exact converted manifest and per-file outputs were not retained with this artifact."
+  },
+  "items": 30,
+  "report": {
+    "aggregate": {
+      "frames": 26243,
+      "speech_fraction": 0.7519338726997375,
+      "threshold": 0.49999999999999994,
+      "roc_auc": 0.8819343068676508,
+      "pr_auc": 0.9572105585618752,
+      "accuracy": 0.8310787638608391,
+      "precision": 0.8982300884955752,
+      "recall": 0.8744235544519333,
+      "f1": 0.8861669619700587,
+      "false_alarm_rate": 0.30030721966205837,
+      "miss_rate": 0.12557644554806668,
+      "reference_segments": 126,
+      "predicted_segments": 337,
+      "matched_segments": 121,
+      "segment_recall": 0.9603174603174603,
+      "short_utterance_recall": 1.0,
+      "onset_error_p50_ms": 60.0,
+      "onset_error_p95_ms": 1080.0,
+      "offset_error_p50_ms": 10.0,
+      "offset_error_p95_ms": 330.0,
+      "premature_end_rate_100ms": 0.371900826446281,
+      "false_triggers": 216,
+      "false_triggers_per_noise_hour": 11889.908256880733
+    },
+    "oracle_test_threshold": {
+      "warning": "Diagnostic only. Never select a release threshold on the test set.",
+      "threshold": 0.38999999999999996,
+      "accuracy": 0.8331364554357352,
+      "precision": 0.8757709251101321,
+      "recall": 0.906704505143668,
+      "f1": 0.8909693001020841,
+      "false_alarm_rate": 0.3898617511520737,
+      "miss_rate": 0.09329549485633203
+    },
+    "groups": {
+      "language": {
+        "und": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "domain": {
+        "public-benchmark": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "channel": {
+        "unknown": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "codec": {
+        "unknown": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "device": {
+        "unknown": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "condition": {
+        "ten-public-testset": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      },
+      "snr": {
+        "unknown": {
+          "frames": 26243,
+          "speech_fraction": 0.7519338726997375,
+          "threshold": 0.49999999999999994,
+          "roc_auc": 0.8819343068676508,
+          "pr_auc": 0.9572105585618752,
+          "accuracy": 0.8310787638608391,
+          "precision": 0.8982300884955752,
+          "recall": 0.8744235544519333,
+          "f1": 0.8861669619700587,
+          "false_alarm_rate": 0.30030721966205837,
+          "miss_rate": 0.12557644554806668
+        }
+      }
+    },
+    "confidence_intervals": {
+      "method": "item_bootstrap",
+      "confidence_level": 0.95,
+      "iterations": 1000,
+      "seed": 20260726,
+      "threshold": 0.49999999999999994,
+      "threshold_policy": "fixed_supplied_threshold",
+      "metrics": {
+        "roc_auc": {
+          "lower": 0.8527576527660946,
+          "upper": 0.9096820873574871
+        },
+        "pr_auc": {
+          "lower": 0.9431235727029147,
+          "upper": 0.9695627537195856
+        },
+        "f1": {
+          "lower": 0.8558978786995401,
+          "upper": 0.9091075843752642
+        },
+        "false_alarm_rate": {
+          "lower": 0.23351331173319365,
+          "upper": 0.3659907698080037
+        },
+        "miss_rate": {
+          "lower": 0.08368710277707596,
+          "upper": 0.17908854936116203
+        }
+      },
+      "production_detector_metrics": {
+        "roc_auc": {
+          "lower": 0.770814211710769,
+          "upper": 0.8337388187174674
+        },
+        "pr_auc": {
+          "lower": 0.867475058413576,
+          "upper": 0.9084727586283602
+        },
+        "f1": {
+          "lower": 0.8555711879216696,
+          "upper": 0.9152932721739816
+        },
+        "false_alarm_rate": {
+          "lower": 0.20229136044741164,
+          "upper": 0.327427047690151
+        },
+        "miss_rate": {
+          "lower": 0.07915514707921022,
+          "upper": 0.19416996455779523
+        }
+      }
+    },
+    "production_detector": {
+      "detector": {
+        "start_threshold": 0.8,
+        "stop_threshold": 0.5,
+        "start_frames": 3,
+        "stop_frames": 4,
+        "pre_roll_frames": 3
+      },
+      "frames": 26243,
+      "speech_fraction": 0.7519338726997375,
+      "accuracy": 0.8369469953892467,
+      "precision": 0.9092257176146594,
+      "recall": 0.8700146961941925,
+      "f1": 0.8891881393240968,
+      "false_alarm_rate": 0.26328725038402456,
+      "miss_rate": 0.12998530380580753,
+      "reference_segments": 126,
+      "predicted_segments": 162,
+      "matched_segments": 115,
+      "segment_recall": 0.9126984126984127,
+      "short_utterance_recall": 1.0,
+      "onset_error_p50_ms": 40.0,
+      "onset_error_p95_ms": 1106.999999999999,
+      "offset_error_p50_ms": 40.0,
+      "offset_error_p95_ms": 559.9999999999991,
+      "premature_end_rate_100ms": 0.26956521739130435,
+      "false_triggers": 47,
+      "false_triggers_per_noise_hour": 2587.1559633027523
+    }
+  }
+}

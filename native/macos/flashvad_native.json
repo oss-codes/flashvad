@@ -1,0 +1,28 @@
+{
+  "format": "flashvad-accelerate-v1",
+  "checkpoint": "flashvad-v0.1.pt",
+  "checkpoint_sha256": "ca9e35475518466b2a1f2e89b4953cd1e26e3d8c513cdcf265ab319e74e2b288",
+  "feature": {
+    "sample_rate": 16000,
+    "frame_ms": 25.0,
+    "hop_ms": 10.0,
+    "n_fft": 512,
+    "n_mels": 40,
+    "f_min": 50.0,
+    "f_max": 7600.0
+  },
+  "model": {
+    "feature_dim": 43,
+    "hidden_dim": 64,
+    "kernel_size": 3,
+    "dilations": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "recurrent_dim": 64,
+    "dropout": 0.08
+  },
+  "total_cache_floats": 1920
+}

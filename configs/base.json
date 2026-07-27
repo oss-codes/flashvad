@@ -1,0 +1,38 @@
+{
+  "seed": 1337,
+  "feature": {
+    "sample_rate": 16000,
+    "frame_ms": 25.0,
+    "hop_ms": 10.0,
+    "n_fft": 512,
+    "n_mels": 40,
+    "f_min": 50.0,
+    "f_max": 7600.0
+  },
+  "model": {
+    "feature_dim": 43,
+    "hidden_dim": 64,
+    "kernel_size": 3,
+    "dilations": [1, 2, 4],
+    "recurrent_dim": 56,
+    "dropout": 0.08
+  },
+  "training": {
+    "chunk_seconds": 4.0,
+    "batch_size": 16,
+    "epochs": 8,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "num_workers": 0,
+    "positive_weight": 1.4,
+    "boundary_weight": 0.15,
+    "gradient_clip": 5.0
+  },
+  "detector": {
+    "start_threshold": 0.62,
+    "stop_threshold": 0.36,
+    "start_frames": 2,
+    "stop_frames": 10,
+    "pre_roll_frames": 3
+  }
+}

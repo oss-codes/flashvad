@@ -1,0 +1,19 @@
+{
+  "selection_split": "validation",
+  "max_false_alarm_rate": 0.1,
+  "detector": {
+    "start_threshold": 0.8,
+    "stop_threshold": 0.5,
+    "start_frames": 3,
+    "stop_frames": 4,
+    "pre_roll_frames": 3
+  },
+  "metrics": {
+    "accuracy": 0.9266013824884792,
+    "precision": 0.8959382916346454,
+    "recall": 0.9205954609265325,
+    "f1": 0.908099531193653,
+    "false_alarm_rate": 0.06949513381995134,
+    "miss_rate": 0.07940453907346748
+  }
+}

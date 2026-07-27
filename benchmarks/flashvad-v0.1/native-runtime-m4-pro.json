@@ -1,0 +1,45 @@
+{
+  "binary_bytes": 267392,
+  "checkpoint": "flashvad-v0.1.pt",
+  "checkpoint_sha256": "ca9e35475518466b2a1f2e89b4953cd1e26e3d8c513cdcf265ab319e74e2b288",
+  "combined_median_us": 11.417,
+  "combined_p95_us": 11.625,
+  "combined_p99_us": 12.042,
+  "hop_ms": 10.0,
+  "init_median_us": 3.542,
+  "init_p95_us": 3.875,
+  "init_p99_us": 5.125,
+  "iterations": 10000,
+  "last_probability": 0.017160367,
+  "library_bytes": 266680,
+  "platform": {
+    "chip": "Apple M4 Pro",
+    "machine": "arm64",
+    "macos": "26.5.2",
+    "release": "25.5.0",
+    "system": "Darwin"
+  },
+  "protocol": {
+    "audio": "all-zero 10 ms hops",
+    "clock": "mach_continuous_time",
+    "initialization_iterations": 500,
+    "measurement_iterations": 10000,
+    "threads": 1,
+    "warmup_hops": 1000
+  },
+  "realtime_factor": 0.001141667,
+  "recorded_at_utc": "2026-07-26T23:49:35.032295+00:00",
+  "runtime": "accelerate-embedded",
+  "schema": "flashvad-native-benchmark-v1",
+  "toolchain": {
+    "build_flags": [
+      "-std=c11",
+      "-O3",
+      "-mcpu=native",
+      "-DNDEBUG",
+      "-DACCELERATE_NEW_LAPACK"
+    ],
+    "clang": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+    "python": "3.12.3"
+  }
+}

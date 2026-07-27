@@ -1,0 +1,118 @@
+{
+  "name": "multilingual-mac-v1",
+  "base_config": "../fleurs_india_gcc.json",
+  "selection": {
+    "split": "validation",
+    "min_detector_f1": 0.85,
+    "max_false_alarm_rate": 0.15,
+    "max_miss_rate": 0.2,
+    "primary_metric": "detector_f1",
+    "tie_breakers": [
+      "lower_false_alarm_rate",
+      "lower_miss_rate",
+      "higher_frame_f1"
+    ],
+    "forbidden_evaluation_sets": [
+      "TEN public test set",
+      "Silero public benchmark data",
+      "FireRedVAD public benchmark data"
+    ],
+    "forbidden_evaluation_identifiers": [
+      "ten-public",
+      "ten-vad",
+      "silero",
+      "firered"
+    ]
+  },
+  "trials": [
+    {
+      "id": "bce-seed-101",
+      "overrides": {
+        "seed": 101,
+        "training": {
+          "focal_gamma": 0.0,
+          "positive_weight": 1.0,
+          "boundary_weight": 0.2
+        }
+      }
+    },
+    {
+      "id": "focal1-seed-102",
+      "overrides": {
+        "seed": 102,
+        "training": {
+          "focal_gamma": 1.0,
+          "positive_weight": 1.0,
+          "boundary_weight": 0.2
+        }
+      }
+    },
+    {
+      "id": "focal2-seed-103",
+      "overrides": {
+        "seed": 103,
+        "training": {
+          "focal_gamma": 2.0,
+          "positive_weight": 1.0,
+          "boundary_weight": 0.25
+        }
+      }
+    },
+    {
+      "id": "focal1-positive-seed-201",
+      "overrides": {
+        "seed": 201,
+        "training": {
+          "focal_gamma": 1.0,
+          "positive_weight": 1.25,
+          "boundary_weight": 0.25
+        }
+      }
+    },
+    {
+      "id": "boundary-seed-202",
+      "overrides": {
+        "seed": 202,
+        "training": {
+          "focal_gamma": 1.0,
+          "positive_weight": 1.0,
+          "boundary_weight": 0.35,
+          "auxiliary_weight": 0.1
+        }
+      }
+    },
+    {
+      "id": "focal2-positive-seed-203",
+      "overrides": {
+        "seed": 203,
+        "training": {
+          "focal_gamma": 2.0,
+          "positive_weight": 1.25,
+          "boundary_weight": 0.2
+        }
+      }
+    },
+    {
+      "id": "focal1-conservative-seed-301",
+      "overrides": {
+        "seed": 301,
+        "training": {
+          "focal_gamma": 1.0,
+          "positive_weight": 0.75,
+          "boundary_weight": 0.25
+        }
+      }
+    },
+    {
+      "id": "focal2-conservative-seed-302",
+      "overrides": {
+        "seed": 302,
+        "training": {
+          "focal_gamma": 2.0,
+          "positive_weight": 0.75,
+          "boundary_weight": 0.2
+        }
+      }
+    }
+  ]
+}

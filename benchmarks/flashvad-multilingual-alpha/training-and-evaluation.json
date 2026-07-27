@@ -1,0 +1,94 @@
+{
+  "schema": "flashvad-multilingual-candidate-v1",
+  "status": "experimental_candidate_not_promoted",
+  "date": "2026-07-27",
+  "release_decision": "Keep the retained FlashVAD v0.1 checkpoint as the default. The trained candidate materially lowers false alarms, but its TEN cross-domain F1, AUC, and miss rate are worse.",
+  "training": {
+    "device": "Apple MPS",
+    "python": "3.12.3",
+    "torch": "2.13.0",
+    "trials": 8,
+    "epochs_per_trial": 16,
+    "total_epochs": 128,
+    "selected_trial": "focal1-conservative-seed-301",
+    "checkpoint_sha256": "0f506d701320c0c6419f05cd0e99c413c7a4f8d9ceaca7b585690ef1802ea672",
+    "selection_split": "validation",
+    "selection_excluded": [
+      "TEN public test set",
+      "Silero public benchmark data",
+      "FireRedVAD public benchmark data"
+    ]
+  },
+  "data": {
+    "train_items": 1056,
+    "validation_items": 264,
+    "noise_train_items": 96,
+    "fleurs_configurations": [
+      "ar_eg",
+      "bn_in",
+      "en_us",
+      "gu_in",
+      "hi_in",
+      "kn_in",
+      "ml_in",
+      "mr_in",
+      "pa_in",
+      "ta_in",
+      "te_in",
+      "ur_pk"
+    ],
+    "fleurs_revision": "70bb2e84b976b7e960aa89f1c648e09c59f894dd",
+    "musan_revision": "3edcfdf89b56dbe6a395ff29f9c29489e03d1321",
+    "train_audio_fingerprint_sha256": "b5bc0bc95481f754d27cd915fd14d2aa64d3cb96268e8a2d020f44f35e8b1a89",
+    "validation_audio_fingerprint_sha256": "695cd2a53c1226eaef7d1499026bf72b628b64ba61d6e6ab37b6eb7d16da231c",
+    "noise_audio_fingerprint_sha256": "64703110bb109d51d9bf3d60a0f79f4afc6b9fc4b0fa64d6871e360af619168a"
+  },
+  "development_validation": {
+    "segment_match_rule": "any overlap of at least one 10 ms frame",
+    "frames": 105600,
+    "roc_auc": 0.9683731424088031,
+    "pr_auc": 0.9480648900945343,
+    "raw_f1": 0.8951907800166444,
+    "detector_f1": 0.9137822374355868,
+    "false_alarm_rate": 0.054650841843775874,
+    "miss_rate": 0.08450948348437577,
+    "segment_recall": 0.9419134396355353,
+    "short_utterance_recall": 0.8853333333333333,
+    "false_triggers": 67,
+    "detector_f1_95pct_item_bootstrap": [
+      0.9012182075289283,
+      0.9234604452376444
+    ],
+    "false_alarm_rate_95pct_item_bootstrap": [
+      0.04471848380066645,
+      0.0676374408086901
+    ]
+  },
+  "ten_public_descriptive_check": {
+    "segment_match_rule": "any overlap of at least one 10 ms frame",
+    "revision": "22a3bcd4509d0faaa8eef4881e8af5f39c178950",
+    "manifest_sha256": "4290bd617cc266d07db2f8ec7b47ebb2ba45afa61b797181578ad2db720fe5d5",
+    "items": 30,
+    "frames": 26243,
+    "roc_auc": 0.8492651863981698,
+    "raw_f1": 0.8000349742065227,
+    "detector_f1": 0.822149575590732,
+    "false_alarm_rate": 0.12350230414746544,
+    "miss_rate": 0.2735519181067248,
+    "segment_recall": 0.9365079365079365,
+    "false_triggers": 156,
+    "warning": "This set was consulted during research. These results are descriptive, not an untouched release test or a basis for candidate selection."
+  },
+  "retained_checkpoint_ten_comparison": {
+    "roc_auc": 0.8819343068676508,
+    "detector_f1": 0.8891881393240968,
+    "false_alarm_rate": 0.26328725038402456,
+    "miss_rate": 0.12998530380580753
+  },
+  "limitations": [
+    "FLEURS is read speech with derived call simulation and weak boundaries, not real carrier audio.",
+    "Arabic is Egyptian rather than Gulf-dialect coverage, and English is US rather than Indian English.",
+    "TEN language, channel, codec, device, and SNR metadata are unknown.",
+    "A production release still requires consented, human-labelled, speaker-disjoint India and GCC call data."
+  ]
+}

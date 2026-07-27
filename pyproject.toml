@@ -1,0 +1,91 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flashvad"
+version = "0.1.0"
+description = "Original causal streaming voice activity detector for low-latency calls"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT AND CC-BY-4.0"
+license-files = [
+  "LICENSE",
+  "NOTICE",
+  "models/flashvad-v0.1/MODEL_LICENSE.md",
+]
+authors = [{ name = "OSS Codes" }]
+keywords = ["vad", "voice-activity-detection", "telephony", "webrtc", "onnx"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+dependencies = [
+  "numpy>=2.0",
+  "onnxruntime>=1.20",
+  "scipy>=1.14",
+  "soundfile>=0.13",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "ruff>=0.9",
+  "torch>=2.6",
+]
+data = [
+  "datasets[audio]>=4.0,<5",
+]
+export = [
+  "onnx>=1.17",
+  "onnxscript>=0.5",
+  "torch>=2.6",
+]
+livekit = [
+  "livekit-agents>=1.6,<2",
+]
+pipecat = [
+  "pipecat-ai>=1.6,<2",
+]
+teachers = [
+  "kaldi-native-fbank>=1.21.3",
+  "kaldiio>=2.18.0",
+  "onnxruntime>=1.20",
+  "torch>=2.6",
+]
+training = [
+  "torch>=2.6",
+]
+
+[project.scripts]
+flashvad = "flashvad.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/oss-codes/flashvad"
+Repository = "https://github.com/oss-codes/flashvad"
+Issues = "https://github.com/oss-codes/flashvad/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/flashvad"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"native/macos" = "flashvad/_native/macos"
+"models/flashvad-v0.1/flashvad-stream.onnx" = "flashvad/_models/flashvad-stream.onnx"
+"models/flashvad-v0.1/flashvad-stream.json" = "flashvad/_models/flashvad-stream.json"
+"models/flashvad-v0.1/MODEL_LICENSE.md" = "flashvad/_models/MODEL_LICENSE.md"
+"NOTICE" = "flashvad/_models/NOTICE.txt"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
