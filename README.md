@@ -21,17 +21,21 @@ completion, interruption state, and a timeout policy.
 
 ## Install
 
+FlashVAD is not published on PyPI yet. Install the current source release:
+
 ```bash
-pip install flashvad
+git clone https://github.com/oss-codes/flashvad.git
+cd flashvad
+pip install .
 ```
 
 Install only the integrations you use:
 
 ```bash
-pip install "flashvad[export]"
-pip install "flashvad[livekit]"
-pip install "flashvad[pipecat]"
-pip install "flashvad[data,training]"
+pip install ".[export]"
+pip install ".[livekit]"
+pip install ".[pipecat]"
+pip install ".[data,training]"
 ```
 
 For repository development:
@@ -138,8 +142,9 @@ npm run dev
 The dark-mode report includes a local microphone/file playground. Audio,
 probabilities, and filenames remain in the browser. The heavy inference runtime
 is lazy-loaded only when the playground becomes visible, and the site supports
-both root and repository-subpath hosting. No deployment configuration is
-included.
+both root and repository-subpath hosting. The official Astro Cloudflare adapter
+and Wrangler configuration are included for a local Workers-compatible build;
+nothing is deployed automatically.
 
 ## macOS native runtime
 

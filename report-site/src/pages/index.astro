@@ -4,6 +4,8 @@ import Metric from "../components/Metric.astro";
 import { ModelPreview } from "../components/ModelPreview";
 import { VadPlayground } from "../components/VadPlayground";
 
+export const prerender = true;
+
 const base = import.meta.env.BASE_URL;
 
 const benchmarkRows = [

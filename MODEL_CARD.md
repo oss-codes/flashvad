@@ -1,3 +1,27 @@
+---
+license: cc-by-4.0
+library_name: flashvad
+language:
+  - ar
+  - en
+  - gu
+  - hi
+  - kn
+  - pa
+  - ta
+  - te
+  - ur
+tags:
+  - audio
+  - voice-activity-detection
+  - vad
+  - streaming
+  - onnx
+  - pytorch
+  - telephony
+  - webrtc
+---
+
 # FlashVAD v0.1 model card
 
 ## Summary
@@ -27,6 +51,21 @@ The ONNX graph accepts precomputed 43-dimensional causal features. Use
 
 The public ONNX file is self-contained and stripped of exporter stack traces,
 local paths, and private build metadata.
+
+## Download and source
+
+Download the complete model repository:
+
+```bash
+hf download oss-codes/flashvad --local-dir flashvad-model
+```
+
+Source code and runtime integrations are published separately at
+[`oss-codes/flashvad`](https://github.com/oss-codes/flashvad).
+
+The ONNX graph does not accept raw waveform audio. It expects the causal
+43-dimensional features described below, with independent feature and model
+state for every call.
 
 ## Intended use
 
@@ -116,5 +155,5 @@ evaluation.
 
 Repository source code is MIT-licensed. The retained model artifacts are
 separately available under CC BY 4.0; see
-`models/flashvad-v0.1/MODEL_LICENSE.md` and `NOTICE`. Third-party datasets,
-models, and benchmark materials retain their own terms.
+`MODEL_LICENSE.md` and `NOTICE`. Third-party datasets, models, and benchmark
+materials retain their own terms.

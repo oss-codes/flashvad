@@ -99,7 +99,7 @@ VAD state when a call or media stream ends.
 Install the optional adapter and load it during worker prewarm:
 
 ```bash
-pip install "flashvad[livekit]"
+pip install ".[livekit]"
 ```
 
 ```python
@@ -126,7 +126,7 @@ vad = FlashVadLiveKit.load_native()
 ## Pipecat
 
 ```bash
-pip install "flashvad[pipecat]"
+pip install ".[pipecat]"
 ```
 
 ```python
