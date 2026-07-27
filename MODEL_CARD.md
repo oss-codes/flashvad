@@ -31,6 +31,8 @@ It consumes 16 kHz mono audio, produces one speech probability every 10 ms,
 and keeps independent convolutional, recurrent, feature, and detector state
 per call.
 
+**Author:** Himanshu Maurya
+
 This checkpoint is an **alpha research preview** for integration testing,
 browser demonstrations, and shadow evaluation. It is not approved for
 production use and is not validated as a general multilingual or India/GCC

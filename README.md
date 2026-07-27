@@ -11,6 +11,9 @@ provides:
 - LiveKit Agents and Pipecat adapters;
 - PCMU, PCMA, and PCM16 telephone ingress.
 
+Created by **Himanshu Maurya** and published through the
+[`oss-codes`](https://github.com/oss-codes) organization.
+
 > **Status: alpha research preview.** The software paths are testable, but the
 > retained checkpoint is not approved for production. Its public-set false-alarm
 > rate is 26.3%, and multilingual India/GCC call accuracy has not been validated.
