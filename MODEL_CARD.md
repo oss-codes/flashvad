@@ -131,7 +131,7 @@ detector policy, the descriptive results are:
 - miss rate: 13.0%.
 
 Because the public set influenced research decisions, this is an exploratory
-external-set result—not an untouched test, independent benchmark, or
+external-set result, not an untouched test, independent benchmark, or
 production generalization estimate. Language is recorded as `und`, and codec,
 channel, device, and SNR are unknown.
 

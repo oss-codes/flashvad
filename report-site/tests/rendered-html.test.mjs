@@ -9,9 +9,51 @@ async function renderedHtml() {
 }
 
 test("Astro renders the complete static benchmark report", async () => {
-  const html = await renderedHtml();
+  const [html, robots, sitemapIndex, sitemap] = await Promise.all([
+    renderedHtml(),
+    readFile(new URL("../dist/client/robots.txt", import.meta.url), "utf8"),
+    readFile(
+      new URL("../dist/client/sitemap-index.xml", import.meta.url),
+      "utf8",
+    ),
+    readFile(new URL("../dist/client/sitemap-0.xml", import.meta.url), "utf8"),
+  ]);
 
-  assert.match(html, /<title>FlashVAD — macOS benchmark report<\/title>/i);
+  assert.match(
+    html,
+    /<title>FlashVAD: Fast Voice Activity Detection for Voice Calls<\/title>/i,
+  );
+  assert.match(
+    html,
+    /<link rel="canonical" href="https:\/\/flash\.oss\.codes\/"/i,
+  );
+  assert.match(
+    html,
+    /<meta name="robots" content="index, follow, max-image-preview:large,/i,
+  );
+  assert.match(
+    html,
+    /<meta property="og:url" content="https:\/\/flash\.oss\.codes\/"/i,
+  );
+  assert.match(
+    html,
+    /<meta property="og:image" content="https:\/\/flash\.oss\.codes\/og-image\.png"/i,
+  );
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image"/i);
+  assert.match(html, /"@type":"SoftwareSourceCode"/);
+  assert.match(html, /"name":"Himanshu Maurya"/);
+  assert.equal((html.match(/xt6s4ttzdy/g) ?? []).length, 1);
+  assert.equal(
+    (html.match(/static\.cloudflareinsights\.com\/beacon\.min\.js/g) ?? [])
+      .length,
+    1,
+  );
+  assert.equal(
+    (html.match(/6edbfa0990a946d6b30f349c4fcfd464/g) ?? []).length,
+    1,
+  );
+  assert.match(html, /data-clarity-mask="true"/);
+  assert.doesNotMatch(html, /\u2014/);
   assert.match(html, /oss\.codes\/<\/span><span[^>]*>flashvad/i);
   assert.match(html, /Voice detection in/);
   assert.match(html, /11\.42 microseconds/);
@@ -45,6 +87,25 @@ test("Astro renders the complete static benchmark report", async () => {
   assert.match(html, /href="#main"/);
   assert.match(html, /aria-label="Report sections"/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+
+  assert.match(
+    robots,
+    /Sitemap: https:\/\/flash\.oss\.codes\/sitemap-index\.xml/,
+  );
+  assert.match(
+    sitemapIndex,
+    /<loc>https:\/\/flash\.oss\.codes\/sitemap-0\.xml<\/loc>/,
+  );
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/flash\.oss\.codes\/<\/loc>/,
+  );
+  await assert.doesNotReject(
+    access(new URL("../dist/client/og-image.png", import.meta.url)),
+  );
+  await assert.doesNotReject(
+    access(new URL("../dist/client/llms.txt", import.meta.url)),
+  );
 });
 
 test("keeps claims, methodology, and Astro islands explicit in source", async () => {
@@ -100,14 +161,25 @@ test("keeps claims, methodology, and Astro islands explicit in source", async ()
   assert.match(playground, /Hear the call and follow each speech track\./);
   assert.match(playground, /Swap user and AI channels/);
   assert.match(playground, /speaker diarization requires a separate model/);
-  assert.match(layout, /FlashVAD — macOS benchmark report/);
+  assert.match(
+    layout,
+    /FlashVAD: Fast Voice Activity Detection for Voice Calls/,
+  );
+  assert.match(layout, /rel="canonical"/);
+  assert.match(layout, /application\/ld\+json/);
+  assert.match(layout, /xt6s4ttzdy/);
+  assert.match(layout, /6edbfa0990a946d6b30f349c4fcfd464/);
+  assert.match(playground, /data-clarity-mask="true"/);
   assert.match(styles, /color-scheme: dark/);
   assert.match(packageJson, /"astro": "7\.1\.3"/);
   assert.match(packageJson, /"@astrojs\/cloudflare": "14\.1\.5"/);
+  assert.match(packageJson, /"@astrojs\/sitemap": "3\.7\.3"/);
   assert.match(packageJson, /"wrangler": "4\.114\.0"/);
   assert.match(packageJson, /sync-public-assets/);
   assert.match(astroConfig, /cloudflare\(\{ imageService: "compile" \}\)/);
   assert.match(astroConfig, /output: "server"/);
+  assert.match(astroConfig, /site: "https:\/\/flash\.oss\.codes"/);
+  assert.match(astroConfig, /sitemap\(/);
   assert.match(astroConfig, /FLASHVAD_BASE/);
   assert.match(astroConfig, /trailingSlash: "always"/);
   assert.match(page, /export const prerender = true/);

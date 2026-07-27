@@ -38,8 +38,8 @@ non-speech vocal events. It enables multi-task training when suitable labels bec
 
 ## Why this is original
 
-The implementation uses common published building blocks—mel features, depthwise temporal
-convolution and a GRU—but the feature set, layer geometry, state API, training loss and detector are
+The implementation uses common published building blocks such as mel features, depthwise temporal
+convolution and a GRU, but the feature set, layer geometry, state API, training loss and detector are
 implemented independently. No external VAD weights or source files are incorporated.
 
 ## Size target

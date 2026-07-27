@@ -1,0 +1,24 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" stroke="#24251F" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="glow" x1="1040" y1="0" x2="520" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C8F55A" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#C8F55A" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#0A0A0A"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="72" y="64" width="1056" height="502" stroke="#37392F" stroke-width="2"/>
+  <circle cx="103" cy="96" r="7" fill="#C8F55A"/>
+  <text x="126" y="104" fill="#92928A" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="2">RESEARCH PREVIEW</text>
+  <text x="72" y="225" fill="#E8E8E2" font-family="Arial, Helvetica, sans-serif" font-size="86" font-weight="800" letter-spacing="-4">FlashVAD</text>
+  <text x="76" y="288" fill="#C8F55A" font-family="Arial, Helvetica, sans-serif" font-size="35" font-weight="700">Fast voice activity detection for voice calls</text>
+  <text x="76" y="348" fill="#B4B4AA" font-family="Arial, Helvetica, sans-serif" font-size="26">10 ms streaming decisions  |  Browser, ONNX, macOS and telephony</text>
+  <path d="M76 448H120L145 386L179 508L216 414L248 474L282 430L316 455H353L380 398L414 494L450 420L484 468L518 439L552 454H588" stroke="#C8F55A" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>
+  <text x="741" y="430" fill="#92928A" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="700" letter-spacing="1.5">MEASURED APPLE M4 PRO</text>
+  <text x="741" y="490" fill="#E8E8E2" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="800">11.42 µs</text>
+  <text x="741" y="527" fill="#B4B4AA" font-family="Arial, Helvetica, sans-serif" font-size="21">warm native inference per 10 ms hop</text>
+</svg>

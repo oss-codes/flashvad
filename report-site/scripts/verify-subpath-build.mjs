@@ -28,6 +28,7 @@ for (const asset of [
   "favicon.svg",
   "models/MODEL_LICENSE.md",
   "NOTICE.txt",
+  "og-image.png",
 ]) {
   assert.ok(
     rendered.includes(`/flashvad/${asset}`),

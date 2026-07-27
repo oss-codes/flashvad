@@ -699,7 +699,11 @@ export function VadPlayground() {
   const busy = phase === "loading" || phase === "analyzing";
 
   return (
-    <section className="section playground-section" id="try-it">
+    <section
+      className="section playground-section"
+      id="try-it"
+      data-clarity-mask="true"
+    >
       <div className="section-heading">
         <div>
           <p className="kicker">Interactive model test</p>
@@ -779,7 +783,8 @@ export function VadPlayground() {
 
           <p className="privacy-note">
             Microphone access starts only after you press the button. No audio,
-            probabilities or filenames are uploaded.
+            probabilities or filenames are uploaded. This playground is masked
+            from site analytics.
           </p>
         </div>
 
@@ -841,7 +846,7 @@ export function VadPlayground() {
             <div>
               <span>full-hop median</span>
               <strong>
-                {medianLatency ? `${medianLatency.toFixed(2)} ms` : "—"}
+                {medianLatency ? `${medianLatency.toFixed(2)} ms` : "N/A"}
               </strong>
             </div>
           </div>

@@ -211,4 +211,4 @@ The pinned M4 Pro runtime snapshot in
 `benchmarks/flashvad-v0.1/external-runtime-m4-pro.json` reports 3.53× lower
 audio-normalized warm compute than Silero ONNX, 14.2× lower than TEN native,
 and 45.2× lower than FireRed streaming ONNX on its declared scopes. Those are
-compute results only—not accuracy, endpoint latency, or production rankings.
+compute results only, not accuracy, endpoint latency, or production rankings.

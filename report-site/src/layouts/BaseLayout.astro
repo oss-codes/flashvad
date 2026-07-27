@@ -3,10 +3,65 @@ import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import "../styles/global.css";
 
-const title = "FlashVAD — macOS benchmark report";
+const title = "FlashVAD: Fast Voice Activity Detection for Voice Calls";
 const description =
-  "Test the FlashVAD research checkpoint locally and inspect measured macOS runtime, integrations, and explicit evaluation limits.";
+  "Test FlashVAD in your browser and explore measured macOS latency, ONNX, LiveKit, Pipecat, and telephony integrations for real-time voice calls.";
 const base = import.meta.env.BASE_URL;
+const site = Astro.site ?? new URL("https://flash.oss.codes");
+const canonicalURL = new URL(Astro.url.pathname, site);
+const socialImageURL = new URL(`${base}og-image.png`, site);
+const sitemapURL = new URL(`${base}sitemap-index.xml`, site);
+const socialTitle = "FlashVAD: Fast Streaming VAD for Voice Calls";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${canonicalURL.href}#website`,
+      url: canonicalURL.href,
+      name: "FlashVAD",
+      description,
+      inLanguage: "en",
+      publisher: {
+        "@type": "Organization",
+        name: "OSS Codes",
+        url: "https://oss.codes/",
+      },
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "@id": `${canonicalURL.href}#software`,
+      name: "FlashVAD",
+      version: "0.1.0",
+      description,
+      url: canonicalURL.href,
+      codeRepository: "https://github.com/oss-codes/flashvad",
+      downloadUrl: "https://huggingface.co/oss-codes/flashvad",
+      programmingLanguage: ["Python", "C", "TypeScript"],
+      runtimePlatform: ["WebAssembly", "ONNX Runtime", "Apple Accelerate"],
+      license: [
+        "https://opensource.org/license/mit",
+        "https://creativecommons.org/licenses/by/4.0/",
+      ],
+      author: {
+        "@type": "Person",
+        name: "Himanshu Maurya",
+      },
+      keywords: [
+        "voice activity detection",
+        "streaming VAD",
+        "voice AI",
+        "telephony",
+        "ONNX",
+        "macOS",
+      ],
+      sameAs: [
+        "https://github.com/oss-codes/flashvad",
+        "https://huggingface.co/oss-codes/flashvad",
+      ],
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -15,15 +70,51 @@ const base = import.meta.env.BASE_URL;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <meta name="author" content="Himanshu Maurya" />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
     <meta name="theme-color" content="#0a0a0a" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="FlashVAD — low-latency streaming VAD research" />
+    <meta property="og:site_name" content="FlashVAD" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={socialTitle} />
     <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="FlashVAD — low-latency streaming VAD research" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={socialImageURL} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="FlashVAD streaming voice activity detection research preview"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={socialTitle} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
+    <meta
+      name="twitter:image:alt"
+      content="FlashVAD streaming voice activity detection research preview"
+    />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href={sitemapURL} />
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <title>{title}</title>
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(structuredData)}
+    />
+    <script type="text/javascript" is:inline>
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "xt6s4ttzdy");
+    </script>
+    <!-- Cloudflare Web Analytics --><script is:inline type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6edbfa0990a946d6b30f349c4fcfd464"}'></script><!-- End Cloudflare Web Analytics -->
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to results</a>

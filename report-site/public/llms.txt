@@ -1,0 +1,23 @@
+# FlashVAD
+
+> FlashVAD is a small causal streaming voice activity detector for low-latency voice calls. The current checkpoint is an alpha research preview and is not approved for production.
+
+Canonical site: https://flash.oss.codes/
+Source code: https://github.com/oss-codes/flashvad
+Model artifacts: https://huggingface.co/oss-codes/flashvad
+Author: Himanshu Maurya
+
+## Capabilities
+
+- One speech probability every 10 ms
+- Browser ONNX and WebAssembly demonstration
+- Native Apple Accelerate runtime for macOS
+- LiveKit Agents, Pipecat, PCMU, PCMA, and PCM16 integrations
+
+## Important limits
+
+- The retained checkpoint has a 26.3% false-alarm rate on the exploratory TEN public-set evaluation.
+- Multilingual India and GCC production accuracy has not been validated.
+- FlashVAD is acoustic VAD, not semantic end-of-turn detection.
+
+Use the source repository and model card for exact benchmark scope, licences, checksums, and evaluation limitations.

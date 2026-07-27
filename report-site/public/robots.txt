@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://flash.oss.codes/sitemap-index.xml
