@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from .artifact_validation import validate_bundled_artifacts
+
 
 def _bundled_model_dir() -> Path:
     packaged = Path(__file__).resolve().parent / "_models"
@@ -21,7 +23,7 @@ def bundled_model_path() -> Path:
     path = _bundled_model_dir() / "flashvad-stream.onnx"
     if not path.is_file():
         raise RuntimeError("FlashVAD's bundled ONNX model is missing from this installation")
-    return path
+    return validate_bundled_artifacts(path)
 
 
 __all__ = ["bundled_model_path"]

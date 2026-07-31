@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import * as ort from "onnxruntime-web/wasm";
 import wasmMjsUrl from "onnxruntime-web/ort-wasm-simd-threaded.mjs?url&no-inline";
 import wasmUrl from "onnxruntime-web/ort-wasm-simd-threaded.wasm?url&no-inline";
 import {
@@ -18,49 +17,63 @@ import {
   speakingStateAtTime,
   summarizeTrack,
 } from "../lib/call-analysis.mjs";
+import { createRetryableLoader } from "../lib/retryable-loader.mjs";
 import {
   StreamingFeatureBuffer,
   StreamingLinearResampler,
   resampleLinear,
 } from "../lib/vad-features.mjs";
 
-ort.env.wasm.numThreads = 1;
-ort.env.wasm.wasmPaths = {
-  wasm: wasmUrl,
-  mjs: wasmMjsUrl,
-};
+type BrowserOrt = typeof import("onnxruntime-web/wasm");
+type BrowserOrtSession = Awaited<
+  ReturnType<BrowserOrt["InferenceSession"]["create"]>
+>;
 
 const publicAsset = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
-let wasmBinaryPromise: Promise<ArrayBuffer> | null = null;
-let browserSessionPromise: Promise<ort.InferenceSession> | null = null;
+const browserRuntimeLoader = createRetryableLoader(async () => {
+  const runtime = await import("onnxruntime-web/wasm");
+  runtime.env.wasm.numThreads = 1;
+  runtime.env.wasm.wasmPaths = {
+    wasm: wasmUrl,
+    mjs: wasmMjsUrl,
+  };
+  return runtime;
+});
+
+const wasmBinaryLoader = createRetryableLoader(async () => {
+  const response = await fetch(wasmUrl);
+  if (!response.ok) {
+    throw new Error(`The browser runtime could not load (${response.status}).`);
+  }
+  return response.arrayBuffer();
+});
 
 async function loadWasmBinary() {
-  if (!wasmBinaryPromise) {
-    wasmBinaryPromise = fetch(wasmUrl).then((response) => {
-      if (!response.ok) {
-        throw new Error(`The browser runtime could not load (${response.status}).`);
-      }
-      return response.arrayBuffer();
-    });
-  }
-  return wasmBinaryPromise;
+  return wasmBinaryLoader.load();
 }
 
+const browserSessionLoader = createRetryableLoader(async () => {
+  const runtime = await browserRuntimeLoader.load();
+  runtime.env.wasm.wasmBinary = await loadWasmBinary();
+  const session = await runtime.InferenceSession.create(
+    publicAsset("models/flashvad-stream.onnx"),
+    {
+      executionProviders: ["wasm"],
+      graphOptimizationLevel: "all",
+    },
+  );
+  return { runtime, session };
+});
+
 async function loadBrowserSession() {
-  if (!browserSessionPromise) {
-    browserSessionPromise = (async () => {
-      ort.env.wasm.wasmBinary = await loadWasmBinary();
-      return ort.InferenceSession.create(
-        publicAsset("models/flashvad-stream.onnx"),
-        {
-          executionProviders: ["wasm"],
-          graphOptimizationLevel: "all",
-        },
-      );
-    })();
-  }
-  return browserSessionPromise;
+  return browserSessionLoader.load();
+}
+
+function resetBrowserRuntime() {
+  wasmBinaryLoader.reset();
+  browserRuntimeLoader.reset();
+  browserSessionLoader.reset();
 }
 
 type Phase =
@@ -91,7 +104,8 @@ type FileAnalysis = {
 };
 
 class BrowserVad {
-  private session: ort.InferenceSession | null = null;
+  private runtime: BrowserOrt | null = null;
+  private session: BrowserOrtSession | null = null;
   private features = new StreamingFeatureBuffer();
   private recurrent = new Float32Array(64);
   private caches = [
@@ -103,7 +117,9 @@ class BrowserVad {
 
   async load() {
     if (this.session) return;
-    this.session = await loadBrowserSession();
+    const loaded = await loadBrowserSession();
+    this.runtime = loaded.runtime;
+    this.session = loaded.session;
   }
 
   reset() {
@@ -125,18 +141,18 @@ class BrowserVad {
     feature: Float32Array,
     frontendLatencyMs = 0,
   ): Promise<FrameResult> {
-    if (!this.session) {
+    if (!this.runtime || !this.session) {
       throw new Error("The browser model is not loaded.");
     }
 
     const started = performance.now();
     const output = await this.session.run({
-      feature: new ort.Tensor("float32", feature, [1, 1, 43]),
-      recurrent: new ort.Tensor("float32", this.recurrent, [1, 1, 64]),
-      cache_0: new ort.Tensor("float32", this.caches[0], [1, 64, 2]),
-      cache_1: new ort.Tensor("float32", this.caches[1], [1, 64, 4]),
-      cache_2: new ort.Tensor("float32", this.caches[2], [1, 64, 8]),
-      cache_3: new ort.Tensor("float32", this.caches[3], [1, 64, 16]),
+      feature: new this.runtime.Tensor("float32", feature, [1, 1, 43]),
+      recurrent: new this.runtime.Tensor("float32", this.recurrent, [1, 1, 64]),
+      cache_0: new this.runtime.Tensor("float32", this.caches[0], [1, 64, 2]),
+      cache_1: new this.runtime.Tensor("float32", this.caches[1], [1, 64, 4]),
+      cache_2: new this.runtime.Tensor("float32", this.caches[2], [1, 64, 8]),
+      cache_3: new this.runtime.Tensor("float32", this.caches[3], [1, 64, 16]),
     });
     const latencyMs = frontendLatencyMs + performance.now() - started;
     const logit = Number(output.speech_logits.data[0]);
@@ -264,6 +280,16 @@ export function VadPlayground() {
     setProgress(0);
     setError("");
   }, []);
+
+  const retryBrowserRuntime = useCallback(async () => {
+    await stopMicrophone();
+    queueRef.current = Promise.resolve();
+    resetBrowserRuntime();
+    engineRef.current = null;
+    secondaryEngineRef.current = null;
+    resetRun();
+    setPhase("idle");
+  }, [resetRun, stopMicrophone]);
 
   const ensureEngine = useCallback(async () => {
     if (!engineRef.current) {
@@ -859,7 +885,21 @@ export function VadPlayground() {
                 : ""}
             </p>
           )}
-          {error && <p className="test-error">{error}</p>}
+          {error && (
+            <div className="test-error" role="alert">
+              <p>{error}</p>
+              <small>
+                Runtime: ONNX Runtime Web / WASM, one worker thread; audio stays
+                in this browser.
+              </small>
+              <button
+                type="button"
+                onClick={() => void retryBrowserRuntime()}
+              >
+                Retry browser runtime
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

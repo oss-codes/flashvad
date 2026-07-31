@@ -17,7 +17,7 @@
     "check": "astro check",
     "test": "npm run build && node --test tests/*.test.mjs",
     "pretest:subpath": "node scripts/sync-public-assets.mjs",
-    "test:subpath": "astro build && node scripts/verify-subpath-build.mjs",
+    "test:subpath": "FLASHVAD_BASE=/flashvad/ astro build && node scripts/verify-subpath-build.mjs",
     "lint": "astro check"
   },
   "dependencies": {

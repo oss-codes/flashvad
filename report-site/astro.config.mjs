@@ -25,4 +25,9 @@ export default defineConfig({
   output: "server",
   site: "https://flash.oss.codes",
   trailingSlash: "always",
+  vite: {
+    optimizeDeps: {
+      include: ["@astrojs/internal-helpers > picomatch"],
+    },
+  },
 });

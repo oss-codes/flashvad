@@ -76,6 +76,41 @@ const externalRows = [
   },
 ];
 
+const colabRows = [
+  {
+    batch: "1",
+    cpuCall: "155.31 µs",
+    cudaCall: "651.31 µs",
+    cpuStream: "155.31 µs",
+    cudaStream: "651.31 µs",
+    decision: "CPU is faster",
+  },
+  {
+    batch: "8",
+    cpuCall: "537.65 µs",
+    cudaCall: "695.31 µs",
+    cpuStream: "67.21 µs",
+    cudaStream: "86.91 µs",
+    decision: "CPU is faster",
+  },
+  {
+    batch: "32",
+    cpuCall: "1,929.27 µs",
+    cudaCall: "677.90 µs",
+    cpuStream: "60.29 µs",
+    cudaStream: "21.18 µs",
+    decision: "CUDA improves throughput",
+  },
+  {
+    batch: "128",
+    cpuCall: "6,164.23 µs",
+    cudaCall: "693.82 µs",
+    cpuStream: "48.16 µs",
+    cudaStream: "5.42 µs",
+    decision: "CUDA improves throughput",
+  },
+];
+
 const completedDataWork = [
   "960 training and 240 validation FLEURS clips across 12 configurations",
   "96 training and 24 validation CC BY MUSAN hard negatives",
@@ -134,7 +169,7 @@ const marketRows = [
           <div class="hero-copy">
             <p class="eyebrow">
               <span class="status-dot" aria-hidden="true" />
-              research preview · 27 July 2026
+              research preview · 1 August 2026
             </p>
             <h1>
               Voice detection in
@@ -332,6 +367,87 @@ const marketRows = [
             competitor RTF divided by FlashVAD native RTF.{" "}
             <a href={`${base}benchmarks/external-runtime-m4-pro.json`}>
               Download the machine-readable evidence.
+            </a>
+          </p>
+        </section>
+
+        <section class="section benchmark-section" id="colab">
+          <div class="section-heading">
+            <div>
+              <p class="kicker">Colab throughput experiment</p>
+              <h2>A T4 helps only when enough calls are ready together.</h2>
+            </div>
+            <p>
+              Tesla T4, ONNX Runtime 1.26.0, 50 warmup steps and 200
+              measured model steps. Feature extraction and scheduler queue
+              time are excluded.
+            </p>
+          </div>
+
+          <div class="experiment-top">
+            <span class="experiment-label">CPU compared with CUDA I/O binding</span>
+            <span class="badge warning">Hardened rerun required</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <caption>Preliminary model-only batch matrix · median measured call</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Ready streams</th>
+                  <th scope="col">CPU call</th>
+                  <th scope="col">CUDA I/O call</th>
+                  <th scope="col">CPU amortized / stream</th>
+                  <th scope="col">CUDA amortized / stream</th>
+                  <th scope="col">Measured result</th>
+                </tr>
+              </thead>
+              <tbody>
+                {colabRows.map((row) => (
+                  <tr>
+                    <th scope="row">{row.batch}</th>
+                    <td>{row.cpuCall}</td>
+                    <td>{row.cudaCall}</td>
+                    <td>{row.cpuStream}</td>
+                    <td>{row.cudaStream}</td>
+                    <td>{row.decision}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="boundary-row">
+            <article>
+              <span>CPU</span>
+              <p>recommended for one call and small batches</p>
+            </article>
+            <article>
+              <span>32+</span>
+              <p>measured point where T4 throughput becomes useful</p>
+            </article>
+            <article>
+              <span>7.60 ms</span>
+              <p>batch-32 CUDA I/O-binding p99 in the short run</p>
+            </article>
+            <article>
+              <span>0</span>
+              <p>accuracy claims made from this compute test</p>
+            </article>
+          </div>
+
+          <p class="benchmark-note">
+            CUDA is not a single-call latency upgrade. A production scheduler
+            must batch only streams already ready in the same 10 ms tick,
+            preserve independent recurrent state, and measure added queue
+            delay. The saved run verifies the requested and active providers,
+            the release model digest, and final-output parity. The current
+            benchmark also rejects provider fallback and checks the full logit
+            trace, so it must be rerun before these values become release
+            claims. The production per-call adapter does not silently batch
+            calls.{" "}
+            <a href={`${base}benchmarks/onnx-provider-colab-t4.json`}>
+              Download the preliminary T4 evidence.
             </a>
           </p>
         </section>

@@ -18,6 +18,7 @@ import torch
 
 from flashvad.checkpoint import load_checkpoint_data
 from flashvad.config import ProjectConfig
+from flashvad.manifest import validate_manifest_group_separation
 from flashvad.train import select_training_device, train
 
 
@@ -147,6 +148,12 @@ def _validate_manifest_separation(
     validation_manifest: Path,
     noise_manifest: Path | None = None,
 ) -> dict[str, dict[str, Any]]:
+    validate_manifest_group_separation(
+        {
+            "train": train_manifest,
+            "validation": validation_manifest,
+        }
+    )
     train_identity = _manifest_audio_identity(train_manifest)
     validation_identity = _manifest_audio_identity(validation_manifest)
     overlap = set(train_identity["unique_audio_sha256"]) & set(

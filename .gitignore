@@ -13,6 +13,26 @@ build/
 artifacts/
 data/
 checkpoints/
+demo-audio/
+
+# Local paper, arXiv, and publication drafts
+paper/
+papers/
+arxiv/
+arxiv-submission/
+manuscript/
+submission/
+research-paper/
+VAD_RESEARCH.md
+*.tex
+*.bib
+*.pdf
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
 
 # Local agent and editor state
 .omo/

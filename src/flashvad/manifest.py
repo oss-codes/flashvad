@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -39,6 +40,9 @@ class ManifestItem:
     teacher_probabilities: Path | None = None
     teacher_weight: float = 1.0
     teacher_confidence_weighting: bool = True
+    speaker_id: str | None = None
+    call_id: str | None = None
+    session_id: str | None = None
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any], root: Path) -> ManifestItem:
@@ -67,12 +71,82 @@ class ManifestItem:
             device=str(raw.get("device", "unknown")),
             condition=str(raw.get("condition", "unknown")),
             snr_db=(float(raw["snr_db"]) if raw.get("snr_db") is not None else None),
+            speaker_id=_optional_identity(raw.get("speaker_id")),
+            call_id=_optional_identity(raw.get("call_id")),
+            session_id=_optional_identity(raw.get("session_id")),
             teacher_probabilities=teacher_path,
             teacher_weight=teacher_weight,
             teacher_confidence_weighting=bool(
                 raw.get("teacher_confidence_weighting", True)
             ),
         )
+
+
+def _optional_identity(value: Any) -> str | None:
+    """Normalize optional split-group identifiers while preserving old manifests."""
+    if value is None:
+        return None
+    normalized = str(value).strip()
+    return normalized or None
+
+
+def validate_manifest_group_separation(
+    manifests: Mapping[str, str | Path],
+) -> dict[str, object]:
+    """Reject speaker/call/session identities shared by named data splits.
+
+    Missing identity fields remain backward compatible: only identifiers actually
+    present in a manifest participate in the check. The error includes field,
+    identity, split, path, and line number so data preparation can fix the source.
+    """
+    if not manifests:
+        raise ValueError("at least one named manifest is required")
+    fields = ("speaker_id", "call_id", "session_id")
+    seen: dict[str, dict[str, list[tuple[str, Path, int]]]] = {
+        field: {} for field in fields
+    }
+    for split, raw_path in manifests.items():
+        split_name = str(split).strip()
+        if not split_name:
+            raise ValueError("manifest split names must not be empty")
+        path = Path(raw_path).resolve()
+        with path.open(encoding="utf-8") as handle:
+            for line_number, line in enumerate(handle, 1):
+                if not line.strip():
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError as exc:
+                    raise ValueError(f"invalid JSON in {path} line {line_number}") from exc
+                if not isinstance(record, dict):
+                    raise ValueError(f"manifest {path} line {line_number} must be an object")
+                for field in fields:
+                    identity = _optional_identity(record.get(field))
+                    if identity is not None:
+                        seen[field].setdefault(identity, []).append(
+                            (split_name, path, line_number)
+                        )
+
+    overlaps: list[str] = []
+    for field, identities in seen.items():
+        for identity, locations in identities.items():
+            split_locations = {location[0] for location in locations}
+            if len(split_locations) < 2:
+                continue
+            details = ", ".join(
+                f"{split} ({path}:{line})" for split, path, line in locations
+            )
+            overlaps.append(f"{field}={identity!r}: {details}")
+    if overlaps:
+        raise ValueError("manifest group overlap detected: " + "; ".join(overlaps))
+    return {
+        "checked_fields": list(fields),
+        "manifests": {str(name): str(Path(path).resolve()) for name, path in manifests.items()},
+        "identities": {
+            field: len(identities)
+            for field, identities in seen.items()
+        },
+    }
 
 
 def rebase_manifest_record(

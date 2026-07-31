@@ -14,6 +14,13 @@ Author: Himanshu Maurya
 - Native Apple Accelerate runtime for macOS
 - LiveKit Agents, Pipecat, PCMU, PCMA, and PCM16 integrations
 
+## Colab throughput experiment
+
+- A preliminary Tesla T4 model-only run was slower than CPU for one and eight ready streams.
+- CUDA I/O binding improved amortized throughput at batches of 32 and 128 already-ready streams.
+- Frontend compute and scheduler queue time were excluded. The hardened full-trace benchmark must be rerun before release claims.
+- This compute experiment makes no accuracy claim.
+
 ## Important limits
 
 - The retained checkpoint has a 26.3% false-alarm rate on the exploratory TEN public-set evaluation.

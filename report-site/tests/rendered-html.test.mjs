@@ -72,6 +72,11 @@ test("Astro renders the complete static benchmark report", async () => {
   assert.match(html, /14\.2×/);
   assert.match(html, /45\.2×/);
   assert.match(html, /machine-readable evidence/);
+  assert.match(html, /A T4 helps only when enough calls are ready together\./);
+  assert.match(html, /Hardened rerun required/);
+  assert.match(html, /CUDA is not a single-call latency upgrade\./);
+  assert.match(html, /7\.60 ms/);
+  assert.match(html, /Download the preliminary T4 evidence\./);
   assert.match(html, /Only FlashVAD executes in this browser demo/);
   assert.match(html, /One persistent model\. Small state per call\./);
   assert.match(html, /Market position by deployment need/);
@@ -106,6 +111,17 @@ test("Astro renders the complete static benchmark report", async () => {
   await assert.doesNotReject(
     access(new URL("../dist/client/llms.txt", import.meta.url)),
   );
+  const colabEvidence = JSON.parse(
+    await readFile(
+      new URL(
+        "../dist/client/benchmarks/onnx-provider-colab-t4.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+  assert.equal(colabEvidence.hardware.gpu, "Tesla T4");
+  assert.equal(colabEvidence.results.length, 12);
 });
 
 test("keeps claims, methodology, and Astro islands explicit in source", async () => {
@@ -117,6 +133,7 @@ test("keeps claims, methodology, and Astro islands explicit in source", async ()
     packageJson,
     astroConfig,
     wranglerConfig,
+    syncScript,
   ] =
     await Promise.all([
       readFile(new URL("../src/pages/index.astro", import.meta.url), "utf8"),
@@ -132,6 +149,10 @@ test("keeps claims, methodology, and Astro islands explicit in source", async ()
       readFile(new URL("../package.json", import.meta.url), "utf8"),
       readFile(new URL("../astro.config.mjs", import.meta.url), "utf8"),
       readFile(new URL("../wrangler.jsonc", import.meta.url), "utf8"),
+      readFile(
+        new URL("../scripts/sync-public-assets.mjs", import.meta.url),
+        "utf8",
+      ),
     ]);
 
   assert.match(page, /These are compute measurements/);
@@ -148,10 +169,20 @@ test("keeps claims, methodology, and Astro islands explicit in source", async ()
   assert.match(page, /0\.853–0\.910/);
   assert.match(page, /20\.2–32\.7%/);
   assert.match(page, /repeatedly on this public set/);
+  assert.match(page, /const colabRows/);
+  assert.match(page, /benchmark also rejects provider fallback/);
+  assert.match(page, /checks the full logit[\s\S]*trace/);
+  assert.match(page, /benchmarks\/onnx-provider-colab-t4\.json/);
+  assert.doesNotMatch(page, /2\.85×|8\.88×/);
   assert.match(page, /<VadPlayground client:visible \/>/);
   assert.match(page, /<ModelPreview client:visible \/>/);
   assert.match(playground, /env\.wasm\.wasmBinary/);
-  assert.match(playground, /onnxruntime-web\/wasm/);
+  assert.match(playground, /wasmBinaryLoader\.reset\(\)/);
+  assert.match(playground, /browserSessionLoader\.reset\(\)/);
+  assert.match(playground, /Retry browser runtime/);
+  assert.match(playground, /audio stays[\s\S]*this browser/);
+  assert.doesNotMatch(playground, /^import \* as ort from "onnxruntime-web\/wasm";/m);
+  assert.match(playground, /import\("onnxruntime-web\/wasm"\)/);
   assert.match(playground, /import\.meta\.env\.BASE_URL/);
   assert.match(playground, /URL\.createObjectURL/);
   assert.match(playground, /speakingStateAtTime/);
@@ -176,11 +207,13 @@ test("keeps claims, methodology, and Astro islands explicit in source", async ()
   assert.match(packageJson, /"@astrojs\/sitemap": "3\.7\.3"/);
   assert.match(packageJson, /"wrangler": "4\.114\.0"/);
   assert.match(packageJson, /sync-public-assets/);
+  assert.match(syncScript, /onnx-provider-colab-t4\.json/);
   assert.match(astroConfig, /cloudflare\(\{ imageService: "compile" \}\)/);
   assert.match(astroConfig, /output: "server"/);
   assert.match(astroConfig, /site: "https:\/\/flash\.oss\.codes"/);
   assert.match(astroConfig, /sitemap\(/);
   assert.match(astroConfig, /FLASHVAD_BASE/);
+  assert.match(astroConfig, /@astrojs\/internal-helpers > picomatch/);
   assert.match(astroConfig, /trailingSlash: "always"/);
   assert.match(page, /export const prerender = true/);
   assert.match(wranglerConfig, /"name": "flashvad-report"/);

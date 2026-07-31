@@ -25,6 +25,7 @@ const rendered = (
 
 for (const asset of [
   "benchmarks/external-runtime-m4-pro.json",
+  "benchmarks/onnx-provider-colab-t4.json",
   "favicon.svg",
   "models/MODEL_LICENSE.md",
   "NOTICE.txt",

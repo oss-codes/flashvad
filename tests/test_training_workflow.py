@@ -277,6 +277,30 @@ def test_sweep_rejects_noise_validation_audio_overlap(tmp_path: Path) -> None:
         raise AssertionError("validation audio cannot be used as training noise")
 
 
+def test_sweep_rejects_train_validation_speaker_overlap(tmp_path: Path) -> None:
+    train_audio = tmp_path / "train.wav"
+    valid_audio = tmp_path / "valid.wav"
+    train_audio.write_bytes(b"different-train-audio")
+    valid_audio.write_bytes(b"different-validation-audio")
+    train = tmp_path / "train.jsonl"
+    valid = tmp_path / "valid.jsonl"
+    train.write_text(
+        json.dumps({"audio": "train.wav", "speaker_id": "speaker-7"}) + "\n",
+        encoding="utf-8",
+    )
+    valid.write_text(
+        json.dumps({"audio": "valid.wav", "speaker_id": "speaker-7"}) + "\n",
+        encoding="utf-8",
+    )
+
+    try:
+        sweep_runner._validate_manifest_separation(train, valid)
+    except ValueError as exc:
+        assert "speaker_id='speaker-7'" in str(exc)
+    else:
+        raise AssertionError("speaker identities cannot cross training splits")
+
+
 def test_committed_sweep_forbids_public_competitor_sets() -> None:
     sweep = json.loads(
         Path("configs/sweeps/multilingual-mac.json").read_text(encoding="utf-8")

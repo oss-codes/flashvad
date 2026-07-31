@@ -8,8 +8,21 @@ documentation and report:
 - `native-runtime-m4-pro.json`: embedded Apple Accelerate runtime;
 - `onnx-runtime-m4-pro.json`: one-thread ONNX Runtime model-step measurement;
 - `pytorch-runtime-m4-pro.json`: one-thread PyTorch reference runtime;
+- `onnx-provider-colab-t4.json`: model-only CPU/CUDA provider and batch-size matrix on a
+  Colab Tesla T4, including output parity and amortized throughput;
 - `telephony-ingress-m4-pro.json`: PCMU/PCMA decode plus causal resampling;
 - `call-runtime-m4-pro.json`: real Python per-call native and ONNX stream wrappers;
+
+Run `python scripts/benchmark_call_scenarios.py --calls 8 --hops 100` to measure
+deterministic round-robin concurrent-call queue delay and end-to-end per-hop
+latency for PCMU, PCMA, 8 kHz little-endian PCM16 telephony, and direct 16 kHz
+float32 audio after warmup. The report records the artifact digest, machine,
+runtime, and whether the causal frontend is included. RTP jitter, packet loss,
+network I/O, and transport policy remain outside the model adapter.
+
+The saved Colab matrix predates the benchmark's strict-fallback and full-trace parity hardening.
+Its requested and active providers, final-output parity, model digest, and timing fields were
+captured successfully, but rerun the current script before using the numbers in release claims.
 - `external-runtime-m4-pro.json`: pinned same-machine Silero, TEN, FireRed,
   and FlashVAD runtime snapshot.
 

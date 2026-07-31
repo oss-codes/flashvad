@@ -28,4 +28,8 @@ await Promise.all([
     resolve(benchmarkRoot, "external-runtime-m4-pro.json"),
     resolve(publicRoot, "benchmarks", "external-runtime-m4-pro.json"),
   ),
+  copyFile(
+    resolve(benchmarkRoot, "onnx-provider-colab-t4.json"),
+    resolve(publicRoot, "benchmarks", "onnx-provider-colab-t4.json"),
+  ),
 ]);

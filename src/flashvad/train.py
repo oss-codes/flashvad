@@ -17,7 +17,7 @@ from .config import ProjectConfig
 from .evaluation import calibrate_detector
 from .features import CausalFeatureExtractor
 from .losses import binary_focal_loss_with_logits
-from .manifest import VadDataset
+from .manifest import VadDataset, validate_manifest_group_separation
 from .metrics import best_f1_threshold, binary_metrics
 from .model import FlashVad
 from .region import RegionProfile, region_sampler
@@ -93,6 +93,12 @@ def train(
     region_profile_path: str | Path | None = None,
     noise_manifest_path: str | Path | None = None,
 ) -> Path:
+    validate_manifest_group_separation(
+        {
+            "train": train_manifest,
+            "validation": valid_manifest,
+        }
+    )
     config = ProjectConfig.load(config_path)
     random.seed(config.seed)
     np.random.seed(config.seed)
