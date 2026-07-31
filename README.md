@@ -9,7 +9,8 @@ provides:
 - an embedded Apple Accelerate runtime for macOS;
 - browser microphone and file testing through ONNX Runtime Web;
 - LiveKit Agents and Pipecat adapters;
-- PCMU, PCMA, and PCM16 telephone ingress.
+- PCMU, PCMA, and PCM16 telephone ingress;
+- reproducible concurrent-call and Colab CPU/CUDA benchmarks.
 
 Created by **Himanshu Maurya** and published through the
 [`oss-codes`](https://github.com/oss-codes) organization.
@@ -76,6 +77,11 @@ call.reset()
 
 Never load an ONNX session inside the per-packet or per-call hot path.
 
+The bundled loader verifies the ONNX and metadata digests, validates the tensor
+contract, and rejects unavailable execution providers or silent provider
+fallback. An explicitly requested CUDA provider therefore cannot quietly run on
+CPU and produce a misleading benchmark.
+
 ## Telephone audio
 
 The telephone adapter decodes 8 kHz G.711 and causally converts it to the
@@ -91,6 +97,22 @@ probabilities, events = call.push(payload_bytes)
 
 RTP sequence handling, jitter buffering, authentication, and packet-loss
 concealment remain the media server or SBC's responsibility.
+
+Measure the complete packaged call path, including codec ingress, causal
+features, inference, and detection:
+
+```bash
+python scripts/benchmark_call_scenarios.py \
+  --provider CPUExecutionProvider \
+  --calls 32 \
+  --hops 500 \
+  --output artifacts/call-scenarios.json
+```
+
+The benchmark reports queue-delay and end-to-end p50, p95, and p99 values for
+PCMU, PCMA, 8 kHz PCM16, and direct 16 kHz float32 audio. It intentionally does
+not claim to measure RTP jitter, packet loss, network I/O, or production
+accuracy.
 
 ## LiveKit Agents
 
@@ -167,6 +189,27 @@ uv run flashvad benchmark-native \
 The native source is included in built wheels. The benchmark writes a
 machine-readable `benchmark.json` containing the checkpoint digest, machine,
 toolchain, protocol, initialization, and warm tail timings.
+
+## Colab training and provider benchmark
+
+Use Colab for licensed multilingual training data or for measuring batched GPU
+throughput. It is not required for macOS native inference, browser inference,
+or single-call CPU operation. The complete handoff is in
+[`docs/COLAB.md`](docs/COLAB.md).
+
+On a GPU runtime, compare CPU, normal CUDA, and CUDA I/O binding before choosing
+a provider:
+
+```bash
+python scripts/benchmark_colab_onnx.py --batches 1 8 32 128
+```
+
+The retained T4 artifact shows that CPU was faster for a single stream, while
+CUDA I/O binding improved amortized model throughput at larger ready batches.
+Do not delay a live call just to fill a batch. Preserve independent recurrent
+state for every call and include scheduler queue delay in the deployment
+decision. The saved T4 result and its limitations are documented in
+[`benchmarks/README.md`](benchmarks/README.md).
 
 ## Reproducible speed snapshot
 
