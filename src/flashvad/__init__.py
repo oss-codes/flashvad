@@ -29,7 +29,7 @@ __all__ = [
     "VadEvent",
     "bundled_model_path",
 ]
-__version__ = "0.1.0"
+__version__ = "0.1.0a1"
 
 
 def __getattr__(name: str) -> Any:

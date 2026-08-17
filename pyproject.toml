@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flashvad"
-version = "0.1.0"
+version = "0.1.0a1"
 description = "Original causal streaming voice activity detector for low-latency calls"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -68,6 +68,32 @@ flashvad = "flashvad.cli:main"
 Homepage = "https://github.com/oss-codes/flashvad"
 Repository = "https://github.com/oss-codes/flashvad"
 Issues = "https://github.com/oss-codes/flashvad/issues"
+
+[tool.hatch.build.targets.sdist]
+# Explicit allowlist: hatchling otherwise sweeps in every untracked directory
+# at the project root, which has already pulled in rendered video and local
+# agent state once.
+# Leading slashes anchor to the project root; unanchored patterns match at any
+# depth and would also pull in report-site/src, report-site/tests, and friends.
+include = [
+  "/src/",
+  "/tests/",
+  "/models/",
+  "/native/",
+  "/configs/",
+  "/scripts/",
+  "/docs/",
+  "/benchmarks/",
+  "/README.md",
+  "/LICENSE",
+  "/NOTICE",
+  "/CITATION.cff",
+  "/MODEL_CARD.md",
+  "/MODEL_LICENSE.md",
+  "/SECURITY.md",
+  "/CONTRIBUTING.md",
+  "/pyproject.toml",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/flashvad"]

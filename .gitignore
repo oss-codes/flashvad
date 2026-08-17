@@ -37,6 +37,8 @@ VAD_RESEARCH.md
 # Local agent and editor state
 .omo/
 .openai/
+.remember/
+videos/
 .env
 .env.*
 

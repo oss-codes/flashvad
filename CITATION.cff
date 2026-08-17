@@ -5,8 +5,8 @@ type: software
 authors:
   - family-names: "Maurya"
     given-names: "Himanshu"
-version: 0.1.0
-date-released: 2026-07-27
+version: 0.1.0a1
+date-released: 2026-08-18
 license: "MIT AND CC-BY-4.0"
 repository-code: "https://github.com/oss-codes/flashvad"
 url: "https://github.com/oss-codes/flashvad"
