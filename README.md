@@ -43,6 +43,17 @@ false-alarm rate described above.
 pip install flashvad
 ```
 
+For the `flashvad` command on its own PATH, without a project environment:
+
+```bash
+uv tool install flashvad     # or: pipx install flashvad
+```
+
+There is no Homebrew formula. ONNX Runtime ships wheels and no source
+distribution, which Homebrew's Python formula path cannot consume, so a tap
+would have to pin platform-specific wheels that `uv tool` and `pipx` already
+resolve correctly.
+
 Install only the integrations you use:
 
 ```bash
