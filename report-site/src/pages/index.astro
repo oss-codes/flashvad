@@ -605,6 +605,38 @@ const marketRows = [
             VAD handles immediate acoustic activity. A semantic end-of-turn model
             is a second pass, not a substitute for fast barge-in detection.
           </p>
+
+          <div class="install-grid">
+            <article class="install-card">
+              <span class="install-label">python</span>
+              <code>pip install flashvad</code>
+              <p>Runtime install pulls ONNX Runtime, not PyTorch.</p>
+              <a href="https://pypi.org/project/flashvad/" target="_blank" rel="noreferrer">PyPI ↗</a>
+            </article>
+            <article class="install-card">
+              <span class="install-label">browser</span>
+              <code>npm install flashvad onnxruntime-web</code>
+              <p>ONNX Runtime Web stays a peer dependency.</p>
+              <a href="https://www.npmjs.com/package/flashvad" target="_blank" rel="noreferrer">npm ↗</a>
+            </article>
+            <article class="install-card">
+              <span class="install-label">weights</span>
+              <code>oss-codes/flashvad</code>
+              <p>Model artifact and card, CC BY 4.0.</p>
+              <a href="https://huggingface.co/oss-codes/flashvad" target="_blank" rel="noreferrer">Hugging Face ↗</a>
+            </article>
+            <article class="install-card">
+              <span class="install-label">source</span>
+              <code>git clone oss-codes/flashvad</code>
+              <p>Training, export, benchmarks, and retained artifacts.</p>
+              <a href="https://github.com/oss-codes/flashvad" target="_blank" rel="noreferrer">GitHub ↗</a>
+            </article>
+          </div>
+
+          <p class="benchmark-note">
+            Alpha research preview. The published packages carry the same 26.3%
+            false-alarm rate reported below.
+          </p>
         </section>
 
         <section class="section accuracy-section" id="accuracy">

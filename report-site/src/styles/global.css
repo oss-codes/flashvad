@@ -1436,6 +1436,59 @@ tbody tr:first-child {
   line-height: 1.5;
 }
 
+.install-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1px;
+  margin-top: 28px;
+  background: var(--border-strong);
+  border: 1px solid var(--border-strong);
+}
+
+.install-card {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  padding: 20px;
+  background: var(--panel);
+}
+
+.install-label {
+  color: var(--dim);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.install-card code {
+  overflow-x: auto;
+  padding: 9px 11px;
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--signal);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.install-card p {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.install-card a {
+  color: var(--text-soft);
+  font-family: var(--mono);
+  font-size: 0.73rem;
+}
+
+.install-card a:hover,
+.install-card a:focus-visible {
+  color: var(--signal);
+}
+
 .pipeline {
   display: grid;
   grid-template-columns: repeat(3, minmax(20px, 1fr) 28px) minmax(20px, 1fr);
