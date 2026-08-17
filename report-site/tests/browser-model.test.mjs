@@ -6,7 +6,7 @@ import * as ort from "onnxruntime-web";
 import {
   StreamingFeatureBuffer,
   extractVadFeatures,
-} from "../src/lib/vad-features.mjs";
+} from "../../packages/web/src/features.mjs";
 
 test("browser frontend stays numerically aligned with PyTorch", () => {
   const frame = Float32Array.from(

@@ -1,0 +1,53 @@
+{
+  "name": "flashvad",
+  "version": "0.1.0-alpha.1",
+  "description": "Causal streaming voice activity detector for browsers and real-time voice agents",
+  "type": "module",
+  "license": "MIT AND CC-BY-4.0",
+  "author": "Himanshu Maurya",
+  "homepage": "https://flash.oss.codes",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oss-codes/flashvad.git",
+    "directory": "packages/web"
+  },
+  "bugs": "https://github.com/oss-codes/flashvad/issues",
+  "keywords": [
+    "vad",
+    "voice-activity-detection",
+    "speech-detection",
+    "barge-in",
+    "turn-detection",
+    "onnx",
+    "webassembly",
+    "realtime",
+    "voice-agent"
+  ],
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.mjs",
+    "./features": "./src/features.mjs",
+    "./detector": "./src/detector.mjs",
+    "./model": "./model/flashvad-stream.onnx",
+    "./package.json": "./package.json"
+  },
+  "main": "./src/index.mjs",
+  "files": [
+    "src/",
+    "model/",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "onnxruntime-web": ">=1.20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

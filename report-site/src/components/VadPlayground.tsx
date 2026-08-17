@@ -22,7 +22,7 @@ import {
   StreamingFeatureBuffer,
   StreamingLinearResampler,
   resampleLinear,
-} from "../lib/vad-features.mjs";
+} from "../../../packages/web/src/features.mjs";
 
 type BrowserOrt = typeof import("onnxruntime-web/wasm");
 type BrowserOrtSession = Awaited<
