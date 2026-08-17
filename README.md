@@ -15,6 +15,11 @@ provides:
 Created by **Himanshu Maurya** and published through the
 [`oss-codes`](https://github.com/oss-codes) organization.
 
+[Demo](https://flash.oss.codes) ·
+[PyPI](https://pypi.org/project/flashvad/) ·
+[npm](https://www.npmjs.com/package/flashvad) ·
+[Hugging Face](https://huggingface.co/oss-codes/flashvad)
+
 > **Status: alpha research preview.** The software paths are testable, but the
 > retained checkpoint is not approved for production. Its public-set false-alarm
 > rate is 26.3%, and multilingual India/GCC call accuracy has not been validated.
@@ -25,20 +30,32 @@ completion, interruption state, and a timeout policy.
 
 ## Install
 
-FlashVAD is not published on PyPI yet. Install the current source release:
+| Package | Install | Contents |
+| --- | --- | --- |
+| [PyPI `flashvad`](https://pypi.org/project/flashvad/) | `pip install flashvad` | Python runtime, telephony adapters, LiveKit and Pipecat integrations, CLI |
+| [npm `flashvad`](https://www.npmjs.com/package/flashvad) | `npm install flashvad onnxruntime-web` | Browser ONNX/WASM runtime, feature frontend, detector |
+| [Hugging Face](https://huggingface.co/oss-codes/flashvad) | — | Model artifact and card, CC BY 4.0 |
+
+Both packages are pre-releases (`0.1.0a1` and `0.1.0-alpha.1`) and carry the
+false-alarm rate described above.
 
 ```bash
-git clone https://github.com/oss-codes/flashvad.git
-cd flashvad
-pip install .
+pip install flashvad
 ```
 
 Install only the integrations you use:
 
 ```bash
-pip install ".[export]"
-pip install ".[livekit]"
-pip install ".[pipecat]"
+pip install "flashvad[livekit]"
+pip install "flashvad[pipecat]"
+pip install "flashvad[export]"
+```
+
+Training and data preparation need a source checkout:
+
+```bash
+git clone https://github.com/oss-codes/flashvad.git
+cd flashvad
 pip install ".[data,training]"
 ```
 
@@ -156,6 +173,29 @@ For the embedded macOS path:
 vad_analyzer = FlashVadPipecatAnalyzer.load_native()
 ```
 
+## Browser package
+
+```bash
+npm install flashvad onnxruntime-web
+```
+
+```js
+import { FlashVad } from "flashvad";
+import modelUrl from "flashvad/model?url";
+
+const ort = await import("onnxruntime-web/wasm");
+const vad = await FlashVad.create({ ort, model: modelUrl, sampleRate: 48_000 });
+const { probabilities, events } = await vad.push(float32Samples);
+```
+
+`onnxruntime-web` is a peer dependency, so an application already running ORT
+keeps one copy. The package source is `packages/web`, which also holds the
+feature frontend the demo site imports, so the published package and the demo
+cannot drift apart numerically. `speech_start` is back-dated by the detector's
+pre-roll, so keep a short ring buffer and seek to `event.frame` rather than
+acting from the event's arrival time. See
+[`packages/web/README.md`](packages/web/README.md).
+
 ## Browser demo
 
 ```bash
@@ -258,7 +298,9 @@ See the
 ## Licences
 
 Repository source code is MIT-licensed. The retained model artifacts are
-separately available under CC BY 4.0; see
+separately available under CC BY 4.0 from
+[Hugging Face](https://huggingface.co/oss-codes/flashvad) and are also bundled
+in both published packages; see
 [`models/flashvad-v0.1/MODEL_LICENSE.md`](models/flashvad-v0.1/MODEL_LICENSE.md)
 and [`NOTICE`](NOTICE). Third-party datasets, models, and benchmarks retain
 their own terms.
